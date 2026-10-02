@@ -1,0 +1,34 @@
+name: Daily Poople Build & Deploy
+
+on:
+  schedule:
+    # Runs every day at 08:01 UTC (right after Poople puzzle drops at 08:00 UTC)
+    - cron: '1 8 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI anytime
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Astro Static Site (Generates Today's Answer Page)
+        run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: poopleanswertoday
+          directory: dist
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}

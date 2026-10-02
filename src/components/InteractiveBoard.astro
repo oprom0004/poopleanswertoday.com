@@ -1,0 +1,287 @@
+---
+import type { DailyPuzzle } from '../lib/daily';
+
+interface Props {
+  puzzle: DailyPuzzle;
+}
+
+const { puzzle } = Astro.props;
+---
+
+<section class="bg-white border-2 border-paper-border rounded-2xl p-5 sm:p-6 shadow-warm-md" id="game-container">
+  <div class="flex items-center justify-between gap-4 mb-4">
+    <h2 class="text-xl sm:text-2xl font-black text-ink flex items-center gap-2">
+      <span>🎮</span> Play Today's Puzzle
+    </h2>
+    <span class="text-xs font-bold px-2.5 py-1 bg-brand/10 text-brand rounded-full">
+      Goal: Turn {puzzle.startWord} → POOP
+    </span>
+  </div>
+
+  <p class="text-sm text-ink-muted mb-4">
+    Type or tap the keyboard below to change one letter at a time. Reach <strong class="text-brand">POOP</strong> in the fewest steps!
+  </p>
+
+  <!-- Interactive Board Component -->
+  <div class="max-w-md mx-auto bg-paper-dark border border-paper-border rounded-xl p-4 sm:p-5">
+    <!-- Target Indicator / Stink Bar -->
+    <div class="mb-4">
+      <div class="flex items-center justify-between text-xs font-bold mb-1.5">
+        <span class="text-ink flex items-center gap-1">🧻 Stink-O-Meter</span>
+        <span id="stink-status" class="text-ink-muted">Start at {puzzle.startWord}</span>
+      </div>
+      <div class="w-full bg-paper border border-paper-border h-3 rounded-full overflow-hidden">
+        <div id="stink-bar" class="bg-gradient-to-r from-brand to-yellow-500 h-full w-[10%] transition-all duration-300"></div>
+      </div>
+    </div>
+
+    <!-- Move History Ladder -->
+    <div id="ladder-board" class="space-y-2 mb-4 font-mono-tile">
+      <!-- Start word row -->
+      <div class="flex items-center justify-center gap-2">
+        <span class="text-xs font-bold text-ink-muted w-10 text-right">START</span>
+        <div class="flex gap-1.5">
+          {puzzle.startWord.split('').map((char) => (
+            <span class="w-9 h-10 flex items-center justify-center font-black text-lg bg-white border-2 border-ink rounded-lg shadow-sm">
+              {char}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <!-- Dynamic rows will be inserted here -->
+      <div id="dynamic-history" class="space-y-2"></div>
+
+      <!-- Current Input Row -->
+      <div id="input-row" class="flex items-center justify-center gap-2">
+        <span class="text-xs font-bold text-brand w-10 text-right" id="step-label">Step 1</span>
+        <div class="flex gap-1.5" id="input-tiles">
+          <span class="w-9 h-10 flex items-center justify-center font-black text-lg bg-yellow-50 border-2 border-dashed border-brand rounded-lg text-ink tile-box" data-pos="0"></span>
+          <span class="w-9 h-10 flex items-center justify-center font-black text-lg bg-yellow-50 border-2 border-dashed border-brand rounded-lg text-ink tile-box" data-pos="1"></span>
+          <span class="w-9 h-10 flex items-center justify-center font-black text-lg bg-yellow-50 border-2 border-dashed border-brand rounded-lg text-ink tile-box" data-pos="2"></span>
+          <span class="w-9 h-10 flex items-center justify-center font-black text-lg bg-yellow-50 border-2 border-dashed border-brand rounded-lg text-ink tile-box" data-pos="3"></span>
+        </div>
+      </div>
+
+      <!-- Target Word Row -->
+      <div class="flex items-center justify-center gap-2 opacity-60">
+        <span class="text-xs font-bold text-ink-muted w-10 text-right">GOAL</span>
+        <div class="flex gap-1.5">
+          {puzzle.targetWord.split('').map((char) => (
+            <span class="w-9 h-10 flex items-center justify-center font-black text-lg bg-paper-border border-2 border-dashed border-ink-muted rounded-lg text-ink-muted">
+              {char}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Alert / Feedback message -->
+    <div id="game-feedback" class="h-6 text-center text-xs font-bold text-red-600 transition-opacity opacity-0 mb-3">
+      Invalid move: change exactly 1 letter!
+    </div>
+
+    <!-- Virtual On-screen Keyboard -->
+    <div class="space-y-1.5 select-none" id="virtual-keyboard">
+      <!-- Row 1 -->
+      <div class="flex justify-center gap-1">
+        {'QWERTYUIOP'.split('').map((k) => (
+          <button type="button" class="key-btn w-8 sm:w-9 h-10 bg-white hover:bg-paper-dark border-b-2 border-paper-border active:border-b-0 active:translate-y-0.5 rounded font-black text-sm text-ink transition-all shadow-sm" data-key={k}>
+            {k}
+          </button>
+        ))}
+      </div>
+      <!-- Row 2 -->
+      <div class="flex justify-center gap-1">
+        {'ASDFGHJKL'.split('').map((k) => (
+          <button type="button" class="key-btn w-8 sm:w-9 h-10 bg-white hover:bg-paper-dark border-b-2 border-paper-border active:border-b-0 active:translate-y-0.5 rounded font-black text-sm text-ink transition-all shadow-sm" data-key={k}>
+            {k}
+          </button>
+        ))}
+      </div>
+      <!-- Row 3 -->
+      <div class="flex justify-center gap-1">
+        <button type="button" class="key-btn px-2.5 sm:px-3 h-10 bg-brand text-white border-b-2 border-brand-dark active:border-b-0 active:translate-y-0.5 rounded font-bold text-xs transition-all shadow-sm" data-key="ENTER">
+          ENTER
+        </button>
+        {'ZXCVBNM'.split('').map((k) => (
+          <button type="button" class="key-btn w-8 sm:w-9 h-10 bg-white hover:bg-paper-dark border-b-2 border-paper-border active:border-b-0 active:translate-y-0.5 rounded font-black text-sm text-ink transition-all shadow-sm" data-key={k}>
+            {k}
+          </button>
+        ))}
+        <button type="button" class="key-btn px-2.5 sm:px-3 h-10 bg-paper-border hover:bg-paper-border/80 border-b-2 border-ink/20 active:border-b-0 active:translate-y-0.5 rounded font-bold text-xs text-ink transition-all shadow-sm" data-key="BACKSPACE">
+          ⌫
+        </button>
+      </div>
+    </div>
+
+    <!-- Win Modal / Dialog -->
+    <div id="win-banner" class="hidden mt-4 p-4 bg-green-50 border-2 border-green-500 rounded-xl text-center">
+      <p class="text-2xl mb-1">🎉 💩 🧻</p>
+      <h3 class="text-base font-black text-green-900 mb-1">You reached POOP!</h3>
+      <p class="text-xs text-green-800 mb-3" id="win-stats">Completed in 8 steps (Optimal: 8)</p>
+      <button
+        type="button"
+        id="share-btn"
+        class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-black text-xs rounded-lg shadow transition-all"
+      >
+        📤 Share Result (Copy Emoji)
+      </button>
+    </div>
+  </div>
+</section>
+
+<script is:inline define:vars={{ startWord: puzzle.startWord, targetWord: puzzle.targetWord, optimalSteps: puzzle.solution.minSteps, puzzleNum: puzzle.number }}>
+  (function() {
+    let currentInput = '';
+    const history = [startWord];
+    let isGameOver = false;
+
+    const inputTiles = document.querySelectorAll('#input-tiles .tile-box');
+    const feedbackEl = document.getElementById('game-feedback');
+    const historyContainer = document.getElementById('dynamic-history');
+    const stepLabel = document.getElementById('step-label');
+    const stinkBar = document.getElementById('stink-bar');
+    const stinkStatus = document.getElementById('stink-status');
+    const winBanner = document.getElementById('win-banner');
+    const winStats = document.getElementById('win-stats');
+    const shareBtn = document.getElementById('share-btn');
+    const inputRow = document.getElementById('input-row');
+
+    function updateTiles() {
+      inputTiles.forEach((tile, idx) => {
+        tile.textContent = currentInput[idx] || '';
+      });
+    }
+
+    function showFeedback(msg) {
+      if (!feedbackEl) return;
+      feedbackEl.textContent = msg;
+      feedbackEl.classList.remove('opacity-0');
+      setTimeout(() => {
+        feedbackEl.classList.add('opacity-0');
+      }, 2500);
+    }
+
+    function isOneCharDiff(w1, w2) {
+      if (w1.length !== 4 || w2.length !== 4) return false;
+      let diff = 0;
+      for (let i = 0; i < 4; i++) {
+        if (w1[i] !== w2[i]) diff++;
+      }
+      return diff === 1;
+    }
+
+    function submitWord() {
+      if (isGameOver) return;
+      if (currentInput.length !== 4) {
+        showFeedback('Word must have 4 letters!');
+        return;
+      }
+
+      const prevWord = history[history.length - 1];
+      if (currentInput === prevWord) {
+        showFeedback('Same as previous word!');
+        return;
+      }
+
+      if (!isOneCharDiff(prevWord, currentInput)) {
+        showFeedback('Must change exactly 1 letter from ' + prevWord + '!');
+        return;
+      }
+
+      // Valid move!
+      history.push(currentInput);
+      
+      // Append row to history
+      const stepIdx = history.length - 1;
+      const row = document.createElement('div');
+      row.className = 'flex items-center justify-center gap-2';
+      
+      let tilesHtml = '';
+      for (let i = 0; i < 4; i++) {
+        const isChanged = currentInput[i] !== prevWord[i];
+        tilesHtml += `<span class="w-9 h-10 flex items-center justify-center font-black text-lg rounded-lg border-2 shadow-sm ${
+          isChanged ? 'bg-green-100 border-green-500 text-green-900' : 'bg-white border-paper-border text-ink'
+        }">${currentInput[i]}</span>`;
+      }
+
+      row.innerHTML = `<span class="text-xs font-bold text-ink-muted w-10 text-right">#${stepIdx}</span><div class="flex gap-1.5">${tilesHtml}</div>`;
+      historyContainer.appendChild(row);
+
+      // Check win
+      if (currentInput === targetWord) {
+        isGameOver = true;
+        if (inputRow) inputRow.classList.add('hidden');
+        if (winBanner) {
+          winBanner.classList.remove('hidden');
+          const totalSteps = history.length - 1;
+          if (winStats) winStats.textContent = `Completed in ${totalSteps} steps (Optimal: ${optimalSteps})`;
+        }
+        if (stinkBar) stinkBar.style.width = '100%';
+        if (stinkStatus) stinkStatus.textContent = '🎉 Goal reached!';
+        return;
+      }
+
+      // Reset for next step
+      currentInput = '';
+      updateTiles();
+      if (stepLabel) stepLabel.textContent = `Step ${history.length}`;
+      
+      // Progressively update stink bar
+      const progress = Math.min(90, Math.floor((history.length / (optimalSteps + 2)) * 100));
+      if (stinkBar) stinkBar.style.width = `${progress}%`;
+      if (stinkStatus) stinkStatus.textContent = `Current: ${history[history.length - 1]}`;
+    }
+
+    function handleInput(key) {
+      if (isGameOver) return;
+      const upper = key.toUpperCase();
+      if (upper === 'BACKSPACE') {
+        currentInput = currentInput.slice(0, -1);
+        updateTiles();
+      } else if (upper === 'ENTER') {
+        submitWord();
+      } else if (/^[A-Z]$/.test(upper) && currentInput.length < 4) {
+        currentInput += upper;
+        updateTiles();
+      }
+    }
+
+    // Bind virtual keyboard
+    document.querySelectorAll('.key-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.getAttribute('data-key');
+        if (key) handleInput(key);
+      });
+    });
+
+    // Bind physical keyboard
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' || e.key === 'Enter' || /^[a-zA-Z]$/.test(e.key)) {
+        handleInput(e.key);
+      }
+    });
+
+    // Bind Share button
+    if (shareBtn) {
+      shareBtn.addEventListener('click', () => {
+        const steps = history.length - 1;
+        const emojiLadder = history.map((w, idx) => {
+          if (idx === 0) return '🧻 ' + w;
+          if (idx === history.length - 1) return '💩 ' + w;
+          return '🟩 ' + w;
+        }).join('\n');
+
+        const shareText = `Poople #${puzzleNum} (${steps}/${optimalSteps} steps)\n${emojiLadder}\nPlay & solve at https://poopleanswertoday.com`;
+        
+        navigator.clipboard.writeText(shareText).then(() => {
+          shareBtn.textContent = '✅ Copied to Clipboard!';
+          setTimeout(() => {
+            shareBtn.textContent = '📤 Share Result (Copy Emoji)';
+          }, 2000);
+        });
+      });
+    }
+  })();
+</script>

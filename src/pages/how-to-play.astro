@@ -1,0 +1,109 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const pageTitle = 'How to Play Poople: Rules, Tips & Word Ladder Strategies';
+const pageDescription = 'Master Poople with our complete guide: basic rules, step-by-step word ladder strategies, common traps to avoid, and BFS shortest path techniques.';
+
+const schemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: 'How to Play Poople: Official Rules & Strategies',
+    description: 'A comprehensive tutorial on solving the daily Poople word ladder game.',
+    author: {
+      '@type': 'Organization',
+      name: 'Poople Answer Today',
+      url: 'https://poopleanswertoday.com',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://poopleanswertoday.com' },
+      { '@type': 'ListItem', position: 2, name: 'How to Play', item: 'https://poopleanswertoday.com/how-to-play' },
+    ],
+  },
+];
+---
+
+<Layout title={pageTitle} description={pageDescription} schema={schemas}>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
+    <div class="space-y-3 text-center">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink tracking-tight">
+        How to Play <span class="text-brand">Poople</span>
+      </h1>
+      <p class="text-base text-ink-muted">
+        Rules, advanced ladder strategies, and tips to solve the daily puzzle in minimum steps.
+      </p>
+    </div>
+
+    <!-- Main Guide Content -->
+    <article class="bg-white border-2 border-paper-border rounded-2xl p-6 sm:p-10 shadow-warm-md space-y-8 text-sm sm:text-base leading-relaxed text-ink">
+      <!-- Section 1 -->
+      <section class="space-y-3">
+        <h2 class="text-xl font-black text-ink flex items-center gap-2 border-b border-paper-border pb-2">
+          <span>🎯</span> The Core Objective
+        </h2>
+        <p>
+          Poople is a daily <strong>word ladder</strong> game invented by Lewis Carroll in 1877. In Poople, your goal is to transform a given <strong>4-letter starting word</strong> into the goal word <strong class="text-brand">POOP</strong> in the minimum possible number of moves.
+        </p>
+      </section>
+
+      <!-- Section 2: Rules -->
+      <section class="space-y-3">
+        <h2 class="text-xl font-black text-ink flex items-center gap-2 border-b border-paper-border pb-2">
+          <span>📜</span> The Official Rules
+        </h2>
+        <ul class="space-y-2 list-disc list-inside text-ink-muted">
+          <li><strong class="text-ink">One Letter at a Time:</strong> Each transition must change exactly <strong>one letter</strong> from the previous word.</li>
+          <li><strong class="text-ink">Valid English Words:</strong> Every transitional step must be a recognized 4-letter English word in the game's dictionary.</li>
+          <li><strong class="text-ink">No Length Change:</strong> Words must always remain exactly 4 letters long throughout the ladder.</li>
+          <li><strong class="text-ink">Shortest Path Bonus:</strong> Your score depends on matching or getting close to the optimal shortest path (par).</li>
+        </ul>
+      </section>
+
+      <!-- Section 3: Visual Example -->
+      <section class="space-y-3 bg-paper-dark p-5 rounded-xl border border-paper-border">
+        <h3 class="text-base font-black text-ink">Example Walkthrough (TEES → POOP)</h3>
+        <p class="text-xs sm:text-sm text-ink-muted">
+          Here is how <code class="font-bold">TEES</code> reaches <code class="font-bold">POOP</code> in 5 steps:
+        </p>
+        <div class="font-mono-tile text-sm font-bold text-brand-dark space-y-1">
+          <p>1. TEES → <strong>P</strong>EES (Change 1st letter: T → P)</p>
+          <p>2. PEES → PEE<strong>P</strong> (Change 4th letter: S → P)</p>
+          <p>3. PEEP → P<strong>R</strong>EP (Change 2nd letter: E → R)</p>
+          <p>4. PREP → PR<strong>O</strong>P (Change 3rd letter: E → O)</p>
+          <p>5. PROP → P<strong>O</strong>OP (Change 2nd letter: R → O) 🏁</p>
+        </div>
+      </section>
+
+      <!-- Section 4: Tips & Strategies -->
+      <section class="space-y-3">
+        <h2 class="text-xl font-black text-ink flex items-center gap-2 border-b border-paper-border pb-2">
+          <span>🧠</span> Pro Tips & Winning Strategies
+        </h2>
+        <div class="space-y-4 text-ink-muted">
+          <div>
+            <h4 class="font-bold text-ink text-sm sm:text-base">1. Work Backwards from "POOP"</h4>
+            <p class="text-xs sm:text-sm">
+              Keep the immediate neighbors of <code>POOP</code> in mind: <code>PLOP</code>, <code>PROP</code>, <code>POLE</code>, <code>POLL</code>, <code>POLO</code>, <code>POOL</code>, <code>POOR</code>, <code>POPE</code>, <code>PORK</code>, <code>PORT</code>, <code>POST</code>, <code>POSH</code>. Your intermediate target is usually one of these gateway words.
+            </p>
+          </div>
+          <div>
+            <h4 class="font-bold text-ink text-sm sm:text-base">2. Watch Out for First-Move Traps</h4>
+            <p class="text-xs sm:text-sm">
+              Many neighbor words seem intuitive but actually branch into dead ends or add extra steps. Check our <a href="/" class="text-brand font-bold underline">daily hints</a> to see which branch is truly optimal.
+            </p>
+          </div>
+          <div>
+            <h4 class="font-bold text-ink text-sm sm:text-base">3. Use the Unlimited Mode to Practice</h4>
+            <p class="text-xs sm:text-sm">
+              The more 4-letter vocabulary patterns you recognize, the faster you will spot shortcuts. Train daily on our <a href="/unlimited" class="text-brand font-bold underline">Poople Unlimited</a> tool.
+            </p>
+          </div>
+        </div>
+      </section>
+    </article>
+  </div>
+</Layout>

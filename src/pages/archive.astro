@@ -1,0 +1,171 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getAllPuzzles } from '../lib/daily';
+
+const puzzles = getAllPuzzles();
+
+const pageTitle = 'Poople Archive: All Past Answers & Solutions';
+const pageDescription = 'Explore the complete archive of past daily Poople puzzles, answers, hints, and shortest word ladder solutions from #1 to today.';
+
+const schemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://poopleanswertoday.com' },
+      { '@type': 'ListItem', position: 2, name: 'Archive', item: 'https://poopleanswertoday.com/archive' },
+    ],
+  },
+];
+---
+
+<Layout title={pageTitle} description={pageDescription} schema={schemas}>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
+    <div class="text-center space-y-3">
+      <div class="inline-flex items-center gap-2">
+        <span class="px-3 py-1 bg-brand/10 text-brand text-xs font-black rounded-full uppercase tracking-wider">
+          Complete Historical Records
+        </span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-black text-ink tracking-tight">
+        Poople <span class="text-brand">Archive</span>
+      </h1>
+      <p class="text-sm sm:text-base text-ink-muted max-w-xl mx-auto">
+        Browse every daily Poople puzzle, starting word, and optimal solution.
+      </p>
+    </div>
+
+    <!-- Search and Difficulty Filter Controls -->
+    <div class="bg-white border-2 border-paper-border rounded-2xl p-4 sm:p-6 shadow-warm-md flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="w-full sm:w-72">
+        <input
+          type="text"
+          id="archive-search"
+          placeholder="Search by word or #number..."
+          class="w-full px-4 py-2 bg-paper-dark border border-paper-border rounded-xl text-sm font-medium text-ink focus:bg-white focus:border-brand outline-none transition-all"
+        />
+      </div>
+
+      <div class="flex items-center gap-2 flex-wrap" id="filter-buttons">
+        <button type="button" class="filter-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-brand text-white transition-colors" data-filter="all">
+          All ({puzzles.length})
+        </button>
+        <button type="button" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-paper-dark text-ink hover:bg-paper-border transition-colors" data-filter="Brutal">
+          Brutal (7+ steps)
+        </button>
+        <button type="button" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-paper-dark text-ink hover:bg-paper-border transition-colors" data-filter="Tricky">
+          Tricky (6 steps)
+        </button>
+        <button type="button" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-paper-dark text-ink hover:bg-paper-border transition-colors" data-filter="Moderate">
+          Moderate (5 steps)
+        </button>
+        <button type="button" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-paper-dark text-ink hover:bg-paper-border transition-colors" data-filter="Easy">
+          Easy (&le; 4 steps)
+        </button>
+      </div>
+    </div>
+
+    <!-- Puzzles Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="archive-grid">
+      {puzzles.map((p) => {
+        const diff = p.solution.difficulty;
+        return (
+          <a
+            href={`/answer/${p.slug}`}
+            class="puzzle-archive-card block p-5 bg-white hover:bg-paper-dark border-2 border-paper-border hover:border-brand/40 rounded-xl shadow-warm-sm hover:shadow-warm-md transition-all group"
+            data-word={p.startWord.toLowerCase()}
+            data-number={p.number}
+            data-difficulty={diff}
+          >
+            <div class="flex items-center justify-between text-xs text-ink-muted mb-2 font-semibold">
+              <span>#{p.number}</span>
+              <span>{p.displayDate}</span>
+            </div>
+
+            <div class="flex items-center justify-between mb-3">
+              <span class="font-mono-tile font-black text-2xl text-ink group-hover:text-brand transition-colors">
+                {p.startWord}
+              </span>
+              <span class="text-xs font-mono font-bold text-ink-muted">→ POOP</span>
+            </div>
+
+            <div class="flex items-center justify-between pt-2 border-t border-paper-border/60 text-xs font-bold">
+              <span class="text-ink">{p.solution.minSteps} steps</span>
+              <span
+                class={`px-2 py-0.5 rounded text-[11px] ${
+                  diff === 'Brutal'
+                    ? 'bg-red-100 text-red-800'
+                    : diff === 'Tricky'
+                    ? 'bg-amber-100 text-amber-800'
+                    : diff === 'Moderate'
+                    ? 'bg-yellow-100 text-yellow-800'
+                    : 'bg-green-100 text-green-800'
+                }`}
+              >
+                {diff}
+              </span>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+
+    <p id="no-results" class="text-center text-sm font-bold text-ink-muted py-12 hidden">
+      No puzzles match your filter or search criteria.
+    </p>
+  </div>
+</Layout>
+
+<script is:inline>
+  const searchInput = document.getElementById('archive-search');
+  const cards = document.querySelectorAll('.puzzle-archive-card');
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const noResults = document.getElementById('no-results');
+
+  let currentFilter = 'all';
+  let searchQuery = '';
+
+  function applyFilters() {
+    let visibleCount = 0;
+    cards.forEach(card => {
+      const word = card.getAttribute('data-word');
+      const num = card.getAttribute('data-number');
+      const diff = card.getAttribute('data-difficulty');
+
+      const matchesSearch = !searchQuery || word.includes(searchQuery) || num.includes(searchQuery);
+      const matchesFilter = currentFilter === 'all' || diff === currentFilter;
+
+      if (matchesSearch && matchesFilter) {
+        card.classList.remove('hidden');
+        visibleCount++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    if (noResults) {
+      if (visibleCount === 0) noResults.classList.remove('hidden');
+      else noResults.classList.add('hidden');
+    }
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value.toLowerCase().trim();
+      applyFilters();
+    });
+  }
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => {
+        b.classList.remove('bg-brand', 'text-white', 'active');
+        b.classList.add('bg-paper-dark', 'text-ink');
+      });
+      btn.classList.add('bg-brand', 'text-white', 'active');
+      btn.classList.remove('bg-paper-dark', 'text-ink');
+      currentFilter = btn.getAttribute('data-filter') || 'all';
+      applyFilters();
+    });
+  });
+</script>

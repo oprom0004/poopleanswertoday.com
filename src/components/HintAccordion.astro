@@ -1,0 +1,163 @@
+---
+import type { DailyPuzzle } from '../lib/daily';
+
+interface Props {
+  puzzle: DailyPuzzle;
+}
+
+const { puzzle } = Astro.props;
+const { solution } = puzzle;
+
+function isChangedDiff(isStart: boolean, word: string, prevWord: string): boolean {
+  if (isStart || !prevWord) return false;
+  return word !== prevWord;
+}
+---
+
+<section class="bg-white border-2 border-paper-border rounded-2xl p-5 sm:p-6 shadow-warm-md">
+  <div class="flex items-center justify-between gap-4 mb-4">
+    <h2 class="text-xl sm:text-2xl font-black text-ink flex items-center gap-2">
+      <span>💡</span> Stuck? Progressive Hints
+    </h2>
+    <span class="text-xs font-semibold px-2.5 py-1 bg-paper-dark text-ink-muted rounded-full">Spoiler-Free</span>
+  </div>
+  <p class="text-sm text-ink-muted mb-5">
+    Need a slight nudge? Reveal one hint at a time to solve today's Poople on your own.
+  </p>
+
+  <div class="space-y-3">
+    <!-- Hint 1 -->
+    <details class="group border border-paper-border rounded-xl bg-paper-bg overflow-hidden">
+      <summary class="flex items-center justify-between p-4 cursor-pointer font-bold text-sm sm:text-base select-none hover:bg-paper-dark/60 transition-colors">
+        <span class="flex items-center gap-2">
+          <span class="w-6 h-6 rounded-full bg-brand/10 text-brand flex items-center justify-center text-xs font-black">1</span>
+          <span>Sniff Test <span class="text-xs text-ink-muted font-normal">(How many steps?)</span></span>
+        </span>
+        <span class="text-xs font-bold text-brand group-open:hidden">Reveal Hint ▾</span>
+        <span class="text-xs font-bold text-ink-muted hidden group-open:inline">Hide ▴</span>
+      </summary>
+      <div class="px-4 pb-4 pt-1 text-sm border-t border-paper-border/60 bg-white font-medium text-ink">
+        The shortest possible path from <strong class="text-brand font-black">{puzzle.startWord}</strong> to <strong class="text-brand font-black">POOP</strong> takes exactly <span class="px-2 py-0.5 bg-yellow-100 text-yellow-900 rounded font-bold">{solution.minSteps} steps</span>.
+      </div>
+    </details>
+
+    <!-- Hint 2 -->
+    <details class="group border border-paper-border rounded-xl bg-paper-bg overflow-hidden">
+      <summary class="flex items-center justify-between p-4 cursor-pointer font-bold text-sm sm:text-base select-none hover:bg-paper-dark/60 transition-colors">
+        <span class="flex items-center gap-2">
+          <span class="w-6 h-6 rounded-full bg-brand/10 text-brand flex items-center justify-center text-xs font-black">2</span>
+          <span>Which letter stinks? <span class="text-xs text-ink-muted font-normal">(Which position to change?)</span></span>
+        </span>
+        <span class="text-xs font-bold text-brand group-open:hidden">Reveal Hint ▾</span>
+        <span class="text-xs font-bold text-ink-muted hidden group-open:inline">Hide ▴</span>
+      </summary>
+      <div class="px-4 pb-4 pt-1 text-sm border-t border-paper-border/60 bg-white font-medium text-ink">
+        Change the <strong class="text-brand font-black">
+          {solution.hints.firstChangePos === 1 ? '1st' : solution.hints.firstChangePos === 2 ? '2nd' : solution.hints.firstChangePos === 3 ? '3rd' : '4th'} letter
+        </strong> (position {solution.hints.firstChangePos}) on your first move.
+      </div>
+    </details>
+
+    <!-- Hint 3 -->
+    <details class="group border border-paper-border rounded-xl bg-paper-bg overflow-hidden">
+      <summary class="flex items-center justify-between p-4 cursor-pointer font-bold text-sm sm:text-base select-none hover:bg-paper-dark/60 transition-colors">
+        <span class="flex items-center gap-2">
+          <span class="w-6 h-6 rounded-full bg-brand/10 text-brand flex items-center justify-center text-xs font-black">3</span>
+          <span>First Plop <span class="text-xs text-ink-muted font-normal">(The exact first word)</span></span>
+        </span>
+        <span class="text-xs font-bold text-brand group-open:hidden">Reveal Hint ▾</span>
+        <span class="text-xs font-bold text-ink-muted hidden group-open:inline">Hide ▴</span>
+      </summary>
+      <div class="px-4 pb-4 pt-1 text-sm border-t border-paper-border/60 bg-white font-medium text-ink">
+        Your first optimal move is to play: <span class="px-2.5 py-1 bg-green-100 text-green-900 rounded font-mono-tile font-extrabold tracking-wider">{solution.hints.firstStepWord}</span>.
+      </div>
+    </details>
+
+    <!-- Full Answer -->
+    <details class="group border-2 border-brand/40 rounded-xl bg-paper-bg overflow-hidden">
+      <summary class="flex items-center justify-between p-4 cursor-pointer font-extrabold text-sm sm:text-base select-none bg-brand/5 hover:bg-brand/10 transition-colors text-brand-dark">
+        <span class="flex items-center gap-2">
+          <span>💩</span>
+          <span>Full Solution <span class="text-xs text-ink-muted font-normal">(Reveal all steps)</span></span>
+        </span>
+        <span class="text-xs font-extrabold text-brand group-open:hidden">Show Answer ▾</span>
+        <span class="text-xs font-extrabold text-ink-muted hidden group-open:inline">Hide Answer ▴</span>
+      </summary>
+      <div class="p-5 border-t border-brand/20 bg-white">
+        <p class="text-xs text-ink-muted uppercase font-bold tracking-wider mb-3">Optimal {solution.minSteps}-Step Ladder Path:</p>
+        
+        <!-- Step-by-step visual tiles -->
+        <div class="space-y-2 font-mono-tile">
+          {solution.optimalPath.map((word, idx) => {
+            const isStart = idx === 0;
+            const isEnd = idx === solution.optimalPath.length - 1;
+            const prevWord = idx > 0 ? solution.optimalPath[idx - 1] : '';
+
+            return (
+              <div class="flex items-center gap-3">
+                <span class="w-12 text-right text-xs font-bold text-ink-muted">
+                  {isStart ? 'START' : isEnd ? 'TARGET' : `Step ${idx}`}
+                </span>
+                <div class="flex gap-1">
+                  {word.split('').map((char, charIdx) => {
+                    const isChanged = !isStart && char !== prevWord[charIdx];
+                    return (
+                      <span
+                        class={`w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center font-black text-sm sm:text-base rounded-md border-2 uppercase transition-all ${
+                          isEnd
+                            ? 'bg-amber-100 border-amber-500 text-amber-900 shadow-sm'
+                            : isChanged
+                            ? 'bg-green-100 border-green-500 text-green-900 scale-105 shadow-sm'
+                            : 'bg-paper-dark border-paper-border text-ink'
+                        }`}
+                      >
+                        {char}
+                      </span>
+                    );
+                  })}
+                </div>
+                {isChangedDiff(isStart, word, prevWord) && (
+                  <span class="text-xs font-sans text-ink-muted hidden sm:inline">
+                    (changed {prevWord.split('').find((c, i) => c !== word[i])} → <strong class="text-ink">{word.split('').find((c, i) => c !== prevWord[i])}</strong>)
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        <!-- Quick plain text copy format -->
+        <div class="mt-4 pt-4 border-t border-paper-border/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <p class="text-xs font-mono font-bold text-ink-muted break-all">
+            {solution.optimalPath.join(' → ')}
+          </p>
+          <button
+            type="button"
+            class="copy-solution-btn inline-flex items-center gap-1.5 px-3 py-1.5 bg-paper-dark hover:bg-paper-border text-ink rounded-lg text-xs font-bold transition-colors w-fit"
+            data-path={solution.optimalPath.join(' → ')}
+            data-puzzle={`Poople #${puzzle.number} (${puzzle.startWord} → POOP) in ${solution.minSteps} steps`}
+          >
+            📋 Copy Path
+          </button>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<script is:inline>
+  document.querySelectorAll('.copy-solution-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const path = btn.getAttribute('data-path');
+      const puzzle = btn.getAttribute('data-puzzle');
+      const textToCopy = `${puzzle}\n${path}\nvia https://poopleanswertoday.com`;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const original = btn.textContent;
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => {
+          btn.textContent = original;
+        }, 2000);
+      });
+    });
+  });
+</script>

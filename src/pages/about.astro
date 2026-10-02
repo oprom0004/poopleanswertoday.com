@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const pageTitle = 'About Us: Poople Answer Today';
+const pageDescription = 'Learn about Poople Answer Today, our mission to build the fastest, most helpful companion solver for word ladder enthusiasts.';
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-12 space-y-8">
+    <div class="text-center space-y-2">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">About <span class="text-brand">Poople Answer Today</span></h1>
+      <p class="text-sm sm:text-base text-ink-muted">Our background, algorithmic solver, and community goals.</p>
+    </div>
+
+    <div class="bg-white border-2 border-paper-border rounded-2xl p-6 sm:p-10 shadow-warm-md space-y-6 text-sm sm:text-base leading-relaxed text-ink">
+      <h2 class="text-xl font-black text-ink">Our Mission</h2>
+      <p>
+        <strong>Poople Answer Today</strong> was created by word game enthusiasts to provide the cleanest, fastest, and most comprehensive companion tool for players of the daily <em>Poople</em> word ladder game.
+      </p>
+
+      <h2 class="text-xl font-black text-ink">How We Solve Puzzles</h2>
+      <p>
+        We run high-performance BFS (Breadth-First Search) graph algorithms across complete 4-letter English lexicons to uncover not only the absolute shortest paths to POOP, but also subtle traps, alternative solutions, and vocabulary meanings.
+      </p>
+
+      <h2 class="text-xl font-black text-ink">Disclaimer</h2>
+      <p class="text-ink-muted text-xs sm:text-sm">
+        Poople Answer Today is an unofficial educational fan site. We are not affiliated with, endorsed by, or connected to the creators of the original Poople game at <a href="https://poople.io" target="_blank" rel="noopener" class="text-brand underline font-bold">poople.io</a>.
+      </p>
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,116 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getAllPuzzles, type DailyPuzzle } from '../../lib/daily';
+import HintAccordion from '../../components/HintAccordion.astro';
+import InteractiveBoard from '../../components/InteractiveBoard.astro';
+import GEOQuickAnswer from '../../components/GEOQuickAnswer.astro';
+import SolutionDetails from '../../components/SolutionDetails.astro';
+import FAQSection from '../../components/FAQSection.astro';
+
+export async function getStaticPaths() {
+  const puzzles = getAllPuzzles();
+  return puzzles.map((puzzle) => ({
+    params: { slug: puzzle.slug },
+    props: { puzzle },
+  }));
+}
+
+interface Props {
+  puzzle: DailyPuzzle;
+}
+
+const { puzzle } = Astro.props;
+
+const pageTitle = `Poople #${puzzle.number} Answer (${puzzle.startWord}): Solution & Hints`;
+const pageDescription = `Full answer and step-by-step hints for Poople #${puzzle.number} (${puzzle.displayDate}). Turn ${puzzle.startWord} to POOP in ${puzzle.solution.minSteps} shortest steps.`;
+
+const schemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: `What is the answer to Poople #${puzzle.number} (${puzzle.startWord})?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `Poople #${puzzle.number} starts from ${puzzle.startWord} and reaches POOP in ${puzzle.solution.minSteps} steps: ${puzzle.solution.optimalPath.join(' → ')}.`,
+        },
+      },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://poopleanswertoday.com',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: `Poople #${puzzle.number}`,
+        item: `https://poopleanswertoday.com/answer/${puzzle.slug}`,
+      },
+    ],
+  },
+];
+---
+
+<Layout title={pageTitle} description={pageDescription} schema={schemas}>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-10">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-xs font-semibold text-ink-muted">
+      <a href="/" class="hover:text-brand">Home</a>
+      <span>/</span>
+      <a href="/archive" class="hover:text-brand">Archive</a>
+      <span>/</span>
+      <span class="text-ink">Poople #{puzzle.number} ({puzzle.startWord})</span>
+    </nav>
+
+    <!-- Header -->
+    <section class="text-center space-y-3">
+      <div class="inline-flex items-center gap-2">
+        <span class="px-3 py-1 bg-brand/10 text-brand text-xs font-black rounded-full uppercase tracking-wider">
+          Poople Archive #{puzzle.number} · {puzzle.displayDate}
+        </span>
+      </div>
+
+      <h1 class="text-3xl sm:text-4xl font-black text-ink tracking-tight">
+        Poople #{puzzle.number} Answer: <span class="text-brand">{puzzle.startWord}</span> to POOP
+      </h1>
+
+      <p class="text-base text-ink-muted max-w-xl mx-auto">
+        Solved in <strong class="text-brand font-black">{puzzle.solution.minSteps} steps</strong> · Rated <strong>{puzzle.solution.difficulty}</strong>
+      </p>
+    </section>
+
+    <!-- Quick Summary Box -->
+    <GEOQuickAnswer puzzle={puzzle} />
+
+    <!-- Two-column interactive grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      <InteractiveBoard puzzle={puzzle} />
+      <HintAccordion puzzle={puzzle} />
+    </div>
+
+    <!-- Step Breakdown & Traps -->
+    <SolutionDetails puzzle={puzzle} />
+
+    <!-- FAQ Section -->
+    <FAQSection puzzle={puzzle} />
+
+    <!-- Back to today -->
+    <div class="text-center pt-4">
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-brand text-white font-black text-sm rounded-xl shadow-warm-md hover:bg-brand-dark transition-all"
+      >
+        ← Back to Today's Poople Answer
+      </a>
+    </div>
+  </div>
+</Layout>

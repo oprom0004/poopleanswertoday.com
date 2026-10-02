@@ -1,0 +1,180 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getTodayPuzzle, getYesterdayPuzzle, getRecentPuzzles } from '../lib/daily';
+import HintAccordion from '../components/HintAccordion.astro';
+import InteractiveBoard from '../components/InteractiveBoard.astro';
+import GEOQuickAnswer from '../components/GEOQuickAnswer.astro';
+import SolutionDetails from '../components/SolutionDetails.astro';
+import RecentGrid from '../components/RecentGrid.astro';
+import FAQSection from '../components/FAQSection.astro';
+import CountdownTimer from '../components/CountdownTimer.astro';
+
+const today = getTodayPuzzle();
+const yesterday = getYesterdayPuzzle();
+const recents = getRecentPuzzles(8);
+
+const pageTitle = `Poople Answer Today (#${today.number}, ${today.displayDate}): Hints & Solution`;
+const pageDescription = `Poople answer today for #${today.number} (${today.displayDate}): Turn ${today.startWord} to POOP in ${today.solution.minSteps} steps. Spoiler-free hints, step-by-step logic, and word ladder solver.`;
+
+// Structured Schema.org data for SEO and GEO
+const schemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: `What is today's Poople answer (#${today.number})?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `Today's Poople (#${today.number}, ${today.displayDate}) starts from ${today.startWord} and reaches POOP in ${today.solution.minSteps} steps: ${today.solution.optimalPath.join(' → ')}.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: `What was yesterday's Poople answer (#${yesterday.number})?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `Yesterday's Poople (#${yesterday.number}, ${yesterday.displayDate}) started from ${yesterday.startWord} and took ${yesterday.solution.minSteps} steps: ${yesterday.solution.optimalPath.join(' → ')}.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What is Poople?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Poople is a daily word ladder puzzle game where players transform a 4-letter starting word into POOP by changing one letter at a time in minimum moves.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'When does the new daily Poople answer reset?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'A new daily Poople puzzle is released every day at 08:00 UTC.',
+        },
+      },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://poopleanswertoday.com',
+      },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: `How to solve Poople #${today.number} (${today.startWord} to POOP)`,
+    description: `Follow this ${today.solution.minSteps}-step optimal shortest path to transform ${today.startWord} into POOP.`,
+    step: today.solution.stepDiffs.map((diff, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: `Step ${diff.step}: Change letter #${diff.position} (${diff.from} to ${diff.to})`,
+      text: `Change letter at position ${diff.position} from ${diff.fromChar} to ${diff.toChar}, making the word ${diff.to}.`,
+    })),
+  },
+];
+---
+
+<Layout title={pageTitle} description={pageDescription} schema={schemas}>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-10">
+    <!-- Hero Header -->
+    <section class="text-center space-y-4">
+      <div class="inline-flex items-center gap-2 mb-2">
+        <span class="px-3 py-1 bg-brand/10 text-brand text-xs font-black rounded-full uppercase tracking-wider">
+          Daily Puzzle #{today.number} · {today.dayOfWeek}, {today.displayDate}
+        </span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl font-black text-ink tracking-tight">
+        Poople <span class="text-brand">Answer Today</span>: Hints & Solution
+      </h1>
+
+      <p class="text-base sm:text-lg text-ink-muted max-w-2xl mx-auto">
+        Transform <strong class="text-ink font-mono-tile font-black px-2 py-0.5 bg-paper-dark border border-paper-border rounded">{today.startWord}</strong> 
+        into <strong class="text-brand font-mono-tile font-black px-2 py-0.5 bg-amber-50 border border-amber-200 rounded">POOP</strong> 
+        · Shortest path in <strong class="text-brand">{today.solution.minSteps} steps</strong>.
+      </p>
+
+      <div class="pt-2">
+        <CountdownTimer />
+      </div>
+    </section>
+
+    <!-- AI Overviews & GEO Direct Answer Box -->
+    <GEOQuickAnswer puzzle={today} />
+
+    <!-- Two-column interactive grid: Play Board & Hints -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      <!-- Left: Interactive Play Board -->
+      <InteractiveBoard puzzle={today} />
+
+      <!-- Right: Progressive Hints & Full Solution -->
+      <HintAccordion puzzle={today} />
+    </div>
+
+    <!-- Step-by-Step Logic, Traps & Vocabulary -->
+    <SolutionDetails puzzle={today} />
+
+    <!-- Yesterday's Answer Banner -->
+    <section class="p-5 bg-paper-dark border border-paper-border rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <span class="text-xs font-bold text-ink-muted uppercase tracking-wide block">Previous Day</span>
+        <h3 class="text-base sm:text-lg font-black text-ink">
+          Yesterday's Poople (#{yesterday.number}, {yesterday.displayDate})
+        </h3>
+        <p class="text-xs sm:text-sm text-ink-muted mt-0.5">
+          Started with <strong class="text-ink">{yesterday.startWord}</strong> · Solved in <strong>{yesterday.solution.minSteps} steps</strong>
+        </p>
+      </div>
+      <a
+        href={`/answer/${yesterday.slug}`}
+        class="inline-flex items-center gap-1.5 px-4 py-2 bg-white hover:bg-paper-border border border-paper-border text-ink rounded-xl text-xs sm:text-sm font-bold shadow-warm-sm transition-all whitespace-nowrap w-fit"
+      >
+        View Yesterday's Solution →
+      </a>
+    </section>
+
+    <!-- Recent Past Answers Grid -->
+    <RecentGrid puzzles={recents} />
+
+    <!-- Features & Utility Tools Banner -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <a
+        href="/solver"
+        class="p-6 bg-white hover:bg-paper-dark border-2 border-paper-border hover:border-brand/40 rounded-2xl shadow-warm-sm hover:shadow-warm-md transition-all group flex items-start gap-4"
+      >
+        <span class="text-3xl">🧮</span>
+        <div>
+          <h3 class="font-black text-lg text-ink group-hover:text-brand transition-colors">Poople Solver</h3>
+          <p class="text-xs sm:text-sm text-ink-muted mt-1 leading-relaxed">
+            Stuck on custom words? Enter any 4-letter English word to instantly find all shortest paths to POOP.
+          </p>
+        </div>
+      </a>
+
+      <a
+        href="/unlimited"
+        class="p-6 bg-white hover:bg-paper-dark border-2 border-paper-border hover:border-brand/40 rounded-2xl shadow-warm-sm hover:shadow-warm-md transition-all group flex items-start gap-4"
+      >
+        <span class="text-3xl">♾️</span>
+        <div>
+          <h3 class="font-black text-lg text-ink group-hover:text-brand transition-colors">Poople Unlimited</h3>
+          <p class="text-xs sm:text-sm text-ink-muted mt-1 leading-relaxed">
+            Done with today's challenge? Practice with unlimited random starting words and master word ladders.
+          </p>
+        </div>
+      </a>
+    </section>
+
+    <!-- FAQ Accordion with Rich Results Schema -->
+    <FAQSection puzzle={today} yesterdayPuzzle={yesterday} />
+  </div>
+</Layout>

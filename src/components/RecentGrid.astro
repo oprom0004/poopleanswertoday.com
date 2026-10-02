@@ -1,0 +1,56 @@
+---
+import type { DailyPuzzle } from '../lib/daily';
+
+interface Props {
+  puzzles: DailyPuzzle[];
+}
+
+const { puzzles } = Astro.props;
+
+function getBadgeClass(diff: string) {
+  if (diff === 'Brutal') return 'bg-red-100 text-red-800';
+  if (diff === 'Tricky') return 'bg-amber-100 text-amber-800';
+  if (diff === 'Moderate') return 'bg-yellow-100 text-yellow-800';
+  return 'bg-green-100 text-green-800';
+}
+---
+
+<section class="space-y-4">
+  <div class="flex items-center justify-between">
+    <h2 class="text-xl sm:text-2xl font-black text-ink flex items-center gap-2">
+      <span>📅</span> Recent Poople Answers
+    </h2>
+    <a href="/archive" class="text-xs sm:text-sm font-bold text-brand hover:underline">
+      View All Archive →
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+    {puzzles.map((p) => (
+      <a
+        href={`/answer/${p.slug}`}
+        class="block p-4 bg-white hover:bg-paper-dark border-2 border-paper-border hover:border-brand/40 rounded-xl shadow-warm-sm hover:shadow-warm-md transition-all duration-200 group"
+      >
+        <div class="flex items-center justify-between text-xs text-ink-muted mb-2 font-semibold">
+          <span>#{p.number}</span>
+          <span>{p.displayDate}</span>
+        </div>
+
+        <div class="flex items-center justify-between mb-3">
+          <span class="font-mono-tile font-black text-xl text-ink group-hover:text-brand transition-colors">
+            {p.startWord}
+          </span>
+          <span class="text-xs font-mono font-bold text-ink-muted">→ POOP</span>
+        </div>
+
+        <div class="flex items-center justify-between pt-2 border-t border-paper-border/60 text-xs font-bold">
+          <span class="text-ink">{p.solution.minSteps} steps</span>
+          <span class={`px-2 py-0.5 rounded text-[11px] ${getBadgeClass(p.solution.difficulty)}`}>
+            {p.solution.difficulty}
+          </span>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>
+

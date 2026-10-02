@@ -1,0 +1,280 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const pageTitle = 'Poople Unlimited: Free Endless Word Ladder Practice';
+const pageDescription = 'Play Poople Unlimited for free. Practice word ladders with infinite random starting words. Train your brain to reach POOP in the shortest steps!';
+
+const schemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Game',
+    name: 'Poople Unlimited',
+    description: 'An endless practice mode for Poople word ladder players.',
+    genre: ['Puzzle Game', 'Word Game', 'Educational Game'],
+    playMode: 'SinglePlayer',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://poopleanswertoday.com' },
+      { '@type': 'ListItem', position: 2, name: 'Unlimited', item: 'https://poopleanswertoday.com/unlimited' },
+    ],
+  },
+];
+---
+
+<Layout title={pageTitle} description={pageDescription} schema={schemas}>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
+    <div class="text-center space-y-3">
+      <div class="inline-flex items-center gap-2">
+        <span class="px-3 py-1 bg-green-100 text-green-900 text-xs font-black rounded-full uppercase tracking-wider">
+          Endless Practice Mode
+        </span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-black text-ink tracking-tight">
+        Poople <span class="text-brand">Unlimited</span>
+      </h1>
+      <p class="text-sm sm:text-base text-ink-muted max-w-xl mx-auto">
+        Finished today's daily puzzle? Play infinite word ladders from random starting words to <strong class="text-brand">POOP</strong>!
+      </p>
+    </div>
+
+    <!-- Unlimited Game Container -->
+    <section class="bg-white border-2 border-paper-border rounded-2xl p-6 sm:p-8 shadow-warm-md">
+      <div class="flex items-center justify-between gap-4 pb-4 border-b border-paper-border">
+        <div>
+          <span class="text-xs font-bold text-ink-muted uppercase">Current Word Target</span>
+          <p class="text-lg font-black text-ink font-mono-tile" id="unlimited-goal-title">
+            START: <span id="current-start-word" class="text-brand">ICED</span> → POOP
+          </p>
+        </div>
+        <button
+          type="button"
+          id="new-game-btn"
+          class="px-4 py-2 bg-paper-dark hover:bg-paper-border text-ink font-bold text-xs rounded-xl border border-paper-border transition-all flex items-center gap-1.5"
+        >
+          🔄 New Random Word
+        </button>
+      </div>
+
+      <!-- Play Arena -->
+      <div class="max-w-md mx-auto mt-6 bg-paper-dark border border-paper-border rounded-xl p-4 sm:p-5">
+        <div class="mb-4">
+          <div class="flex items-center justify-between text-xs font-bold mb-1.5">
+            <span class="text-ink">🧻 Stink-O-Meter</span>
+            <span id="unlimited-stink-status" class="text-ink-muted">In progress</span>
+          </div>
+          <div class="w-full bg-paper border border-paper-border h-3 rounded-full overflow-hidden">
+            <div id="unlimited-stink-bar" class="bg-gradient-to-r from-brand to-yellow-500 h-full w-[10%] transition-all duration-300"></div>
+          </div>
+        </div>
+
+        <div id="unlimited-ladder-board" class="space-y-2 mb-4 font-mono-tile">
+          <!-- Dynamic history inserted here -->
+        </div>
+
+        <!-- Input row -->
+        <div id="unlimited-input-row" class="flex items-center justify-center gap-2 mb-2 font-mono-tile">
+          <span class="text-xs font-bold text-brand w-10 text-right" id="unlimited-step-label">Step 1</span>
+          <div class="flex gap-1.5" id="unlimited-input-tiles">
+            <span class="w-9 h-10 flex items-center justify-center font-black text-lg bg-yellow-50 border-2 border-dashed border-brand rounded-lg text-ink"></span>
+            <span class="w-9 h-10 flex items-center justify-center font-black text-lg bg-yellow-50 border-2 border-dashed border-brand rounded-lg text-ink"></span>
+            <span class="w-9 h-10 flex items-center justify-center font-black text-lg bg-yellow-50 border-2 border-dashed border-brand rounded-lg text-ink"></span>
+            <span class="w-9 h-10 flex items-center justify-center font-black text-lg bg-yellow-50 border-2 border-dashed border-brand rounded-lg text-ink"></span>
+          </div>
+        </div>
+
+        <div id="unlimited-feedback" class="h-6 text-center text-xs font-bold text-red-600 transition-opacity opacity-0 mb-2"></div>
+
+        <!-- Keyboard -->
+        <div class="space-y-1.5 select-none" id="unlimited-keyboard">
+          <div class="flex justify-center gap-1">
+            {'QWERTYUIOP'.split('').map((k) => (
+              <button type="button" class="unlimited-key w-8 sm:w-9 h-10 bg-white hover:bg-paper-dark border-b-2 border-paper-border rounded font-black text-sm text-ink shadow-sm" data-key={k}>
+                {k}
+              </button>
+            ))}
+          </div>
+          <div class="flex justify-center gap-1">
+            {'ASDFGHJKL'.split('').map((k) => (
+              <button type="button" class="unlimited-key w-8 sm:w-9 h-10 bg-white hover:bg-paper-dark border-b-2 border-paper-border rounded font-black text-sm text-ink shadow-sm" data-key={k}>
+                {k}
+              </button>
+            ))}
+          </div>
+          <div class="flex justify-center gap-1">
+            <button type="button" class="unlimited-key px-2.5 h-10 bg-brand text-white border-b-2 border-brand-dark rounded font-bold text-xs shadow-sm" data-key="ENTER">
+              ENTER
+            </button>
+            {'ZXCVBNM'.split('').map((k) => (
+              <button type="button" class="unlimited-key w-8 sm:w-9 h-10 bg-white hover:bg-paper-dark border-b-2 border-paper-border rounded font-black text-sm text-ink shadow-sm" data-key={k}>
+                {k}
+              </button>
+            ))}
+            <button type="button" class="unlimited-key px-2.5 h-10 bg-paper-border border-b-2 border-ink/20 rounded font-bold text-xs text-ink shadow-sm" data-key="BACKSPACE">
+              ⌫
+            </button>
+          </div>
+        </div>
+
+        <div id="unlimited-win-banner" class="hidden mt-4 p-4 bg-green-50 border-2 border-green-500 rounded-xl text-center">
+          <p class="text-2xl mb-1">🎉 💩</p>
+          <h3 class="text-base font-black text-green-900 mb-1">You reached POOP!</h3>
+          <p class="text-xs text-green-800 mb-3" id="unlimited-win-stats"></p>
+          <button
+            type="button"
+            id="play-again-btn"
+            class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white font-black text-xs rounded-lg shadow"
+          >
+            Play Another Word 🎲
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<script is:inline>
+  const POOL = ["iced", "tees", "gage", "pain", "foes", "rise", "yard", "funk", "cold", "warm", "safe", "calm", "dust", "rope", "bear", "lack", "film", "gold", "talk", "wood", "farm", "bell", "knee", "wind", "soap", "chat", "blue", "cure"];
+  let startWord = 'ICED';
+  let history = [startWord];
+  let currentInput = '';
+  let isGameOver = false;
+
+  const startWordEl = document.getElementById('current-start-word');
+  const ladderBoard = document.getElementById('unlimited-ladder-board');
+  const inputTiles = document.querySelectorAll('#unlimited-input-tiles span');
+  const feedbackEl = document.getElementById('unlimited-feedback');
+  const stepLabel = document.getElementById('unlimited-step-label');
+  const stinkBar = document.getElementById('unlimited-stink-bar');
+  const stinkStatus = document.getElementById('unlimited-stink-status');
+  const winBanner = document.getElementById('unlimited-win-banner');
+  const winStats = document.getElementById('unlimited-win-stats');
+  const inputRow = document.getElementById('unlimited-input-row');
+
+  function initGame(word) {
+    startWord = (word || POOL[Math.floor(Math.random() * POOL.length)]).toUpperCase();
+    startWordEl.textContent = startWord;
+    history = [startWord];
+    currentInput = '';
+    isGameOver = false;
+    winBanner.classList.add('hidden');
+    inputRow.classList.remove('hidden');
+    stinkBar.style.width = '10%';
+    stinkStatus.textContent = `Start: ${startWord}`;
+    stepLabel.textContent = 'Step 1';
+    
+    // Render start tile
+    ladderBoard.innerHTML = `
+      <div class="flex items-center justify-center gap-2">
+        <span class="text-xs font-bold text-ink-muted w-10 text-right">START</span>
+        <div class="flex gap-1.5">
+          ${startWord.split('').map(c => `<span class="w-9 h-10 flex items-center justify-center font-black text-lg bg-white border-2 border-ink rounded-lg shadow-sm">${c}</span>`).join('')}
+        </div>
+      </div>
+    `;
+    updateTiles();
+  }
+
+  function updateTiles() {
+    inputTiles.forEach((tile, idx) => {
+      tile.textContent = currentInput[idx] || '';
+    });
+  }
+
+  function showMsg(msg) {
+    feedbackEl.textContent = msg;
+    feedbackEl.classList.remove('opacity-0');
+    setTimeout(() => feedbackEl.classList.add('opacity-0'), 2500);
+  }
+
+  function isOneDiff(w1, w2) {
+    if (w1.length !== 4 || w2.length !== 4) return false;
+    let diff = 0;
+    for (let i = 0; i < 4; i++) {
+      if (w1[i] !== w2[i]) diff++;
+    }
+    return diff === 1;
+  }
+
+  function submitMove() {
+    if (isGameOver) return;
+    if (currentInput.length !== 4) {
+      showMsg('Must be 4 letters!');
+      return;
+    }
+
+    const prev = history[history.length - 1];
+    if (currentInput === prev) {
+      showMsg('Same word!');
+      return;
+    }
+    if (!isOneDiff(prev, currentInput)) {
+      showMsg(`Must change 1 letter from ${prev}!`);
+      return;
+    }
+
+    history.push(currentInput);
+    const stepIdx = history.length - 1;
+    
+    const row = document.createElement('div');
+    row.className = 'flex items-center justify-center gap-2';
+    const tilesHtml = currentInput.split('').map((c, i) => {
+      const isChanged = c !== prev[i];
+      return `<span class="w-9 h-10 flex items-center justify-center font-black text-lg rounded-lg border-2 shadow-sm ${
+        isChanged ? 'bg-green-100 border-green-500 text-green-900' : 'bg-white border-paper-border text-ink'
+      }">${c}</span>`;
+    }).join('');
+
+    row.innerHTML = `<span class="text-xs font-bold text-ink-muted w-10 text-right">#${stepIdx}</span><div class="flex gap-1.5">${tilesHtml}</div>`;
+    ladderBoard.appendChild(row);
+
+    if (currentInput === 'POOP') {
+      isGameOver = true;
+      inputRow.classList.add('hidden');
+      winBanner.classList.remove('hidden');
+      winStats.textContent = `Turned ${startWord} into POOP in ${stepIdx} steps!`;
+      stinkBar.style.width = '100%';
+      stinkStatus.textContent = '🎉 Solved!';
+      return;
+    }
+
+    currentInput = '';
+    updateTiles();
+    stepLabel.textContent = `Step ${history.length}`;
+    stinkBar.style.width = `${Math.min(90, history.length * 15)}%`;
+    stinkStatus.textContent = `Current: ${history[history.length - 1]}`;
+  }
+
+  function handleKey(k) {
+    if (isGameOver) return;
+    const upper = k.toUpperCase();
+    if (upper === 'BACKSPACE') {
+      currentInput = currentInput.slice(0, -1);
+      updateTiles();
+    } else if (upper === 'ENTER') {
+      submitMove();
+    } else if (/^[A-Z]$/.test(upper) && currentInput.length < 4) {
+      currentInput += upper;
+      updateTiles();
+    }
+  }
+
+  document.querySelectorAll('.unlimited-key').forEach(btn => {
+    btn.addEventListener('click', () => {
+      handleKey(btn.getAttribute('data-key'));
+    });
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Backspace' || e.key === 'Enter' || /^[a-zA-Z]$/.test(e.key)) {
+      handleKey(e.key);
+    }
+  });
+
+  document.getElementById('new-game-btn').addEventListener('click', () => initGame());
+  document.getElementById('play-again-btn').addEventListener('click', () => initGame());
+
+  initGame('ICED');
+</script>

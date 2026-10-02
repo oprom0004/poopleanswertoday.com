@@ -1,0 +1,66 @@
+---
+import type { DailyPuzzle } from '../lib/daily';
+
+interface Props {
+  puzzle: DailyPuzzle;
+}
+
+const { puzzle } = Astro.props;
+const { solution } = puzzle;
+---
+
+<!-- GEO / AI Overviews Direct Answer Box -->
+<section class="bg-paper-dark/80 border-2 border-brand/20 rounded-2xl p-5 sm:p-6 mb-8 text-ink" aria-label="Quick Answer Summary">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+    <div class="flex items-center gap-2">
+      <span class="px-2.5 py-0.5 bg-brand text-white text-xs font-black rounded-md uppercase tracking-wide">
+        AI Quick Summary
+      </span>
+      <h2 class="text-base font-black text-ink">
+        Today's Poople #{puzzle.number} Answer Key ({puzzle.displayDate})
+      </h2>
+    </div>
+    <span class="text-xs font-semibold text-ink-muted">
+      Updated Daily at 08:00 UTC
+    </span>
+  </div>
+
+  <!-- Direct Answer Core Statement -->
+  <p class="text-sm leading-relaxed text-ink mb-4">
+    The answer to today's <strong>Poople #{puzzle.number}</strong> ({puzzle.displayDate}) starting with 
+    <strong class="text-brand font-black">{puzzle.startWord}</strong> takes <strong class="text-brand font-black">{solution.minSteps} steps</strong> to reach 
+    <strong class="text-brand font-black">POOP</strong>. The shortest optimal sequence is:
+  </p>
+
+  <!-- Highlight Box -->
+  <div class="bg-white border border-brand/30 rounded-xl p-3.5 sm:p-4 mb-4 font-mono-tile text-sm sm:text-base font-bold text-brand-dark flex flex-wrap items-center gap-1.5 shadow-sm">
+    {solution.optimalPath.map((w, idx) => (
+      <span class="inline-flex items-center">
+        <span class={`px-2 py-1 rounded ${idx === 0 || idx === solution.optimalPath.length - 1 ? 'bg-amber-100 text-amber-900 font-black' : 'bg-paper-dark text-ink'}`}>
+          {w}
+        </span>
+        {idx < solution.optimalPath.length - 1 && <span class="mx-1 text-ink-muted">→</span>}
+      </span>
+    ))}
+  </div>
+
+  <!-- Structured Fact Matrix -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+    <div class="bg-white/90 border border-paper-border p-2.5 rounded-lg">
+      <span class="text-ink-muted block font-medium">Starting Word</span>
+      <span class="font-extrabold text-ink text-sm font-mono-tile">{puzzle.startWord}</span>
+    </div>
+    <div class="bg-white/90 border border-paper-border p-2.5 rounded-lg">
+      <span class="text-ink-muted block font-medium">Optimal Steps</span>
+      <span class="font-extrabold text-brand text-sm">{solution.minSteps} Steps</span>
+    </div>
+    <div class="bg-white/90 border border-paper-border p-2.5 rounded-lg">
+      <span class="text-ink-muted block font-medium">Difficulty Level</span>
+      <span class="font-extrabold text-amber-700 text-sm">{solution.difficulty}</span>
+    </div>
+    <div class="bg-white/90 border border-paper-border p-2.5 rounded-lg">
+      <span class="text-ink-muted block font-medium">First Move</span>
+      <span class="font-extrabold text-green-700 text-sm font-mono-tile">{solution.hints.firstStepWord}</span>
+    </div>
+  </div>
+</section>

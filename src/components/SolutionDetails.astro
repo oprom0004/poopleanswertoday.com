@@ -1,0 +1,102 @@
+---
+import type { DailyPuzzle } from '../lib/daily';
+
+interface Props {
+  puzzle: DailyPuzzle;
+}
+
+const { puzzle } = Astro.props;
+const { solution } = puzzle;
+---
+
+<section class="bg-white border-2 border-paper-border rounded-2xl p-5 sm:p-7 shadow-warm-md space-y-6">
+  <div>
+    <h2 class="text-xl sm:text-2xl font-black text-ink flex items-center gap-2 mb-2">
+      <span>🔍</span> Step-by-Step Breakdown & Logic
+    </h2>
+    <p class="text-sm text-ink-muted leading-relaxed">
+      In Poople, every transitional word must be a valid 4-letter English word. Here is the detailed explanation for turning 
+      <strong class="text-brand">{puzzle.startWord}</strong> into <strong class="text-brand">POOP</strong> in <strong>{solution.minSteps} moves</strong>.
+    </p>
+  </div>
+
+  <!-- Step List with Word Meanings -->
+  <div class="space-y-3">
+    {solution.stepDiffs.map((diff) => (
+      <div class="p-3.5 bg-paper-dark/60 border border-paper-border rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-brand text-white flex items-center justify-center text-xs font-black">
+              {diff.step}
+            </span>
+            <span class="font-mono-tile font-extrabold text-sm sm:text-base text-ink">
+              {diff.from} <span class="text-brand">→</span> <span class="text-green-800 bg-green-100 px-1.5 py-0.5 rounded">{diff.to}</span>
+            </span>
+            <span class="text-xs text-ink-muted font-medium">
+              (Change letter #{diff.position}: {diff.fromChar} → {diff.toChar})
+            </span>
+          </div>
+          {diff.definition && (
+            <p class="text-xs text-ink-muted italic pl-8">
+              "{diff.definition}"
+            </p>
+          )}
+        </div>
+        <div class="text-right pl-8 sm:pl-0">
+          <span class="text-xs font-bold text-brand bg-brand/10 px-2.5 py-1 rounded-full whitespace-nowrap">
+            {diff.stepsRemaining === 0 ? '🏁 Target POOP!' : `${diff.stepsRemaining} step${diff.stepsRemaining > 1 ? 's' : ''} left`}
+          </span>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- First-move Traps Warning -->
+  {solution.traps && solution.traps.length > 0 && (
+    <div class="pt-4 border-t border-paper-border">
+      <h3 class="text-base font-black text-amber-900 flex items-center gap-2 mb-2">
+        <span>⚠️</span> Common First-Move Traps for {puzzle.startWord}
+      </h3>
+      <p class="text-xs sm:text-sm text-ink-muted mb-3">
+        Be careful! Changing {puzzle.startWord} into these neighbor words will lead to dead ends or longer paths:
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        {solution.traps.map((trap) => (
+          <div class="p-2.5 bg-amber-50/80 border border-amber-200 rounded-lg text-xs">
+            <span class="font-mono-tile font-black text-amber-950 px-1.5 py-0.5 bg-amber-200 rounded mr-1.5">{trap.word}</span>
+            <span class="text-amber-900">{trap.reason}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+
+  <!-- Alternative Optimal Paths if multiple -->
+  {solution.allOptimalPaths && solution.allOptimalPaths.length > 1 && (
+    <div class="pt-4 border-t border-paper-border">
+      <h3 class="text-base font-black text-ink flex items-center gap-2 mb-2">
+        <span>🔀</span> Alternative Shortest Paths ({solution.allOptimalPaths.length} routes exist)
+      </h3>
+      <div class="space-y-1.5">
+        {solution.allOptimalPaths.slice(1, 4).map((altPath, idx) => (
+          <p class="text-xs font-mono-tile text-ink-muted bg-paper-dark p-2 rounded border border-paper-border/80">
+            Route #{idx + 2}: {altPath.join(' → ')}
+          </p>
+        ))}
+      </div>
+    </div>
+  )}
+
+  <!-- Difficulty Assessment -->
+  <div class="pt-4 border-t border-paper-border bg-paper-bg p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div>
+      <span class="text-xs font-bold text-ink-muted uppercase tracking-wider block mb-0.5">Difficulty Analysis</span>
+      <p class="text-sm font-extrabold text-ink">
+        Today's puzzle is rated <span class="text-brand font-black">{solution.difficulty}</span> ({solution.minSteps} steps).
+      </p>
+    </div>
+    <div class="text-xs text-ink-muted">
+      Historical Average: ~5.6 steps · Benchmark: 4-8 steps
+    </div>
+  </div>
+</section>

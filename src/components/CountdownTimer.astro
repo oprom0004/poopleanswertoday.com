@@ -1,0 +1,36 @@
+---
+// Countdown component to 08:00 UTC
+---
+
+<div class="inline-flex items-center gap-2 bg-paper-dark border border-paper-border px-3.5 py-1.5 rounded-xl text-xs font-bold text-ink">
+  <span class="inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+  <span>Next Poople drops in:</span>
+  <span id="countdown-clock" class="font-mono-tile text-brand font-black">--:--:--</span>
+</div>
+
+<script is:inline>
+  function updateCountdown() {
+    const clock = document.getElementById('countdown-clock');
+    if (!clock) return;
+
+    const now = new Date();
+    // Next 08:00:00 UTC
+    const target = new Date();
+    target.setUTCHours(8, 0, 0, 0);
+
+    if (now.getTime() >= target.getTime()) {
+      target.setUTCDate(target.getUTCDate() + 1);
+    }
+
+    const diff = Math.max(0, target.getTime() - now.getTime());
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+    const pad = (n) => String(n).padStart(2, '0');
+    clock.textContent = `${pad(hours)}:${pad(mins)}:${pad(secs)}`;
+  }
+
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
+</script>

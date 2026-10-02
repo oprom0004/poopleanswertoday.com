@@ -1,0 +1,115 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const pageTitle = 'Poople vs Wordle vs Connections: Which Daily Word Puzzle is Best?';
+const pageDescription = 'Comparing the best daily word games: Poople vs Wordle vs Connections. Discover mechanics, difficulty curves, and why word ladder fans love Poople.';
+
+const schemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: 'Poople vs Wordle vs Connections: Complete Daily Word Game Comparison',
+    description: 'An objective breakdown comparing Poople, Wordle, and NYT Connections for puzzle lovers.',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://poopleanswertoday.com' },
+      { '@type': 'ListItem', position: 2, name: 'Poople vs Wordle', item: 'https://poopleanswertoday.com/wordle-vs-poople' },
+    ],
+  },
+];
+---
+
+<Layout title={pageTitle} description={pageDescription} schema={schemas}>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
+    <div class="text-center space-y-3">
+      <div class="inline-flex items-center gap-2">
+        <span class="px-3 py-1 bg-amber-100 text-amber-900 text-xs font-black rounded-full uppercase tracking-wider">
+          Game Comparisons & Reviews
+        </span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-black text-ink tracking-tight">
+        <span class="text-brand">Poople</span> vs Wordle vs Connections
+      </h1>
+      <p class="text-base text-ink-muted max-w-2xl mx-auto">
+        Which daily brain teaser is right for you? A head-to-head comparison of mechanics, difficulty, and daily fun.
+      </p>
+    </div>
+
+    <!-- Comparison Table Matrix -->
+    <section class="bg-white border-2 border-paper-border rounded-2xl p-6 sm:p-8 shadow-warm-md space-y-6">
+      <h2 class="text-xl font-black text-ink">Feature Comparison Matrix</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm border-collapse">
+          <thead>
+            <tr class="border-b-2 border-paper-border text-ink bg-paper-dark">
+              <th class="p-3 font-black">Feature</th>
+              <th class="p-3 font-black text-brand">💩 Poople</th>
+              <th class="p-3 font-black text-green-800">🟩 Wordle</th>
+              <th class="p-3 font-black text-purple-800">🟪 NYT Connections</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-paper-border/60 text-ink">
+            <tr>
+              <td class="p-3 font-bold text-ink-muted">Genre</td>
+              <td class="p-3 font-bold text-brand">Word Ladder / Pathfinding</td>
+              <td class="p-3">Mastermind / Word Guessing</td>
+              <td class="p-3">Category Association / Grouping</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold text-ink-muted">Goal</td>
+              <td class="p-3 font-bold">Turn starting word into POOP</td>
+              <td class="p-3">Guess hidden 5-letter word</td>
+              <td class="p-3">Group 16 words into 4 sets of 4</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold text-ink-muted">Max Moves</td>
+              <td class="p-3 font-bold text-brand">Unlimited (Fewest steps win)</td>
+              <td class="p-3">Strict 6 guesses</td>
+              <td class="p-3">4 mistakes allowed</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold text-ink-muted">Difficulty Curve</td>
+              <td class="p-3 font-bold">Dynamic (4 to 9 steps)</td>
+              <td class="p-3">Moderate</td>
+              <td class="p-3">Hard / Lateral Thinking</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold text-ink-muted">Practice Mode</td>
+              <td class="p-3 font-bold text-green-700">✅ Built-in Unlimited</td>
+              <td class="p-3 text-red-600">❌ 1 game per day only</td>
+              <td class="p-3 text-red-600">❌ 1 game per day only</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Detailed Breakdown -->
+    <article class="bg-white border-2 border-paper-border rounded-2xl p-6 sm:p-10 shadow-warm-md space-y-6 text-sm sm:text-base leading-relaxed text-ink">
+      <section class="space-y-3">
+        <h2 class="text-xl font-black text-ink">Why Word Puzzle Fans Love Poople</h2>
+        <p>
+          While <strong>Wordle</strong> tests your deductive elimination skills and <strong>Connections</strong> tests your lateral vocabulary association, <strong>Poople</strong> tests your mental map of the English lexicon and path optimization.
+        </p>
+        <p>
+          Because there are no "strikes" or game-over failure states, Poople allows players to experiment freely with branching paths, making it both deeply satisfying and accessible for casual players.
+        </p>
+      </section>
+
+      <section class="space-y-3 pt-4 border-t border-paper-border">
+        <h2 class="text-xl font-black text-ink">The Verdict</h2>
+        <p>
+          If you enjoy daily morning brain workouts, adding <strong>Poople</strong> to your daily rotation alongside Wordle and Connections gives you the perfect triad of deduction, association, and word ladder pathfinding.
+        </p>
+        <div class="pt-2">
+          <a href="/" class="inline-flex items-center gap-2 px-6 py-3 bg-brand text-white font-black text-sm rounded-xl shadow-warm-sm hover:bg-brand-dark transition-all">
+            Play Today's Poople Puzzle →
+          </a>
+        </div>
+      </section>
+    </article>
+  </div>
+</Layout>

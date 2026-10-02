@@ -1,0 +1,263 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  schema?: Record<string, any>[];
+}
+
+const {
+  title,
+  description,
+  canonical = Astro.url.href,
+  image = 'https://poopleanswertoday.com/og-image.png',
+  type = 'website',
+  schema = [],
+} = Astro.props;
+
+const currentPath = Astro.url.pathname;
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#FDFBF7" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta property="og:site_name" content="Poople Answer Today" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonical} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Google AdSense Ready (Replace with pub-id when approved) -->
+    <!-- <meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXX"> -->
+
+    <!-- JSON-LD Structured Data for SEO / GEO -->
+    {schema.map((item) => (
+      <script type="application/ld+json" set:html={JSON.stringify(item)} />
+    ))}
+
+    <!-- Global CSS & Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet" />
+
+    <style is:global>
+      :root {
+        --brand-brown: #8B5A2B;
+        --brand-dark: #2C221E;
+        --paper-bg: #FDFBF7;
+      }
+      body {
+        background-color: #FDFBF7;
+        color: #2C221E;
+        font-family: 'Inter', sans-serif;
+      }
+      .font-mono-tile {
+        font-family: 'JetBrains Mono', monospace;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex flex-col bg-paper text-ink selection:bg-brand-light/30 selection:text-brand-dark antialiased">
+    <!-- SVGs definition for animated Mascot -->
+    <svg width="0" height="0" class="absolute hidden" aria-hidden="true">
+      <defs>
+        <g id="rolly-mascot">
+          <ellipse cx="30" cy="65" rx="20" ry="4" fill="#2C221E" opacity="0.12"></ellipse>
+          <rect x="8" y="10" width="44" height="50" rx="10" fill="#FFFFFF" stroke="#2C221E" stroke-width="3"></rect>
+          <ellipse cx="30" cy="12" rx="22" ry="7" fill="#FFFFFF" stroke="#2C221E" stroke-width="3"></ellipse>
+          <ellipse cx="30" cy="12" rx="7" ry="2.5" fill="#D4A373"></ellipse>
+          <path d="M8 46 q-6 8 2 14" fill="none" stroke="#2C221E" stroke-width="3" stroke-linecap="round"></path>
+        </g>
+      </defs>
+    </svg>
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 bg-paper/90 backdrop-blur-md border-b border-paper-border">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-2.5 group">
+          <svg class="w-8 h-9 transform group-hover:-rotate-6 transition-transform duration-200" viewBox="0 0 60 70" aria-hidden="true">
+            <use href="#rolly-mascot"></use>
+            <circle cx="23" cy="34" r="2.5" fill="#2C221E"></circle>
+            <circle cx="37" cy="34" r="2.5" fill="#2C221E"></circle>
+            <path d="M24 42 q6 6 12 0" fill="none" stroke="#2C221E" stroke-width="2.5" stroke-linecap="round"></path>
+          </svg>
+          <span class="font-extrabold text-lg sm:text-xl tracking-tight text-ink group-hover:text-brand transition-colors">
+            Poople <span class="text-brand">Answer</span> Today
+          </span>
+        </a>
+
+        <!-- Desktop Nav -->
+        <nav class="hidden md:flex items-center gap-1.5 text-sm font-semibold">
+          <a
+            href="/"
+            class={`px-3.5 py-1.5 rounded-lg transition-colors ${
+              currentPath === '/' ? 'bg-brand text-white shadow-warm-sm' : 'text-ink-muted hover:text-ink hover:bg-paper-dark'
+            }`}
+          >
+            Today's Answer
+          </a>
+          <a
+            href="/solver"
+            class={`px-3.5 py-1.5 rounded-lg transition-colors ${
+              currentPath === '/solver' ? 'bg-brand text-white shadow-warm-sm' : 'text-ink-muted hover:text-ink hover:bg-paper-dark'
+            }`}
+          >
+            Solver
+          </a>
+          <a
+            href="/unlimited"
+            class={`px-3.5 py-1.5 rounded-lg transition-colors ${
+              currentPath === '/unlimited' ? 'bg-brand text-white shadow-warm-sm' : 'text-ink-muted hover:text-ink hover:bg-paper-dark'
+            }`}
+          >
+            Unlimited
+          </a>
+          <a
+            href="/archive"
+            class={`px-3.5 py-1.5 rounded-lg transition-colors ${
+              currentPath.startsWith('/archive') || currentPath.startsWith('/answer')
+                ? 'bg-brand text-white shadow-warm-sm'
+                : 'text-ink-muted hover:text-ink hover:bg-paper-dark'
+            }`}
+          >
+            Archive
+          </a>
+          <a
+            href="/words-to-poop"
+            class={`px-3.5 py-1.5 rounded-lg transition-colors ${
+              currentPath === '/words-to-poop' ? 'bg-brand text-white shadow-warm-sm' : 'text-ink-muted hover:text-ink hover:bg-paper-dark'
+            }`}
+          >
+            Words to POOP
+          </a>
+          <a
+            href="/strategy"
+            class={`px-3.5 py-1.5 rounded-lg transition-colors ${
+              currentPath === '/strategy' ? 'bg-brand text-white shadow-warm-sm' : 'text-ink-muted hover:text-ink hover:bg-paper-dark'
+            }`}
+          >
+            Strategy
+          </a>
+        </nav>
+
+        <!-- Mobile Menu Button -->
+        <button
+          id="mobile-menu-btn"
+          type="button"
+          class="md:hidden p-2 rounded-lg text-ink hover:bg-paper-dark focus:outline-none"
+          aria-label="Toggle Navigation"
+        >
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Dropdown -->
+      <div id="mobile-menu" class="hidden md:hidden border-t border-paper-border bg-paper-dark/95 px-4 pt-2 pb-4 space-y-1 text-sm font-semibold">
+        <a href="/" class="block px-3 py-2 rounded-md hover:bg-paper">Today's Answer</a>
+        <a href="/solver" class="block px-3 py-2 rounded-md hover:bg-paper">Poople Solver</a>
+        <a href="/unlimited" class="block px-3 py-2 rounded-md hover:bg-paper">Poople Unlimited</a>
+        <a href="/archive" class="block px-3 py-2 rounded-md hover:bg-paper">Past Answers (Archive)</a>
+        <a href="/words-to-poop" class="block px-3 py-2 rounded-md hover:bg-paper">Words to POOP (Cheat Sheet)</a>
+        <a href="/strategy" class="block px-3 py-2 rounded-md hover:bg-paper">Strategy & Tips</a>
+        <a href="/what-is-poople" class="block px-3 py-2 rounded-md hover:bg-paper">What is Poople?</a>
+        <a href="/wordle-vs-poople" class="block px-3 py-2 rounded-md hover:bg-paper">Poople vs Wordle</a>
+        <a href="/how-to-play" class="block px-3 py-2 rounded-md hover:bg-paper">How to Play & Rules</a>
+      </div>
+    </header>
+
+    <!-- Main Page Content -->
+    <main class="flex-grow">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-20 border-t border-paper-border bg-paper-dark py-12 text-sm text-ink-muted">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 space-y-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-paper-border/60">
+          <div class="md:col-span-1 space-y-3">
+            <div class="flex items-center gap-2.5">
+              <svg class="w-8 h-9" viewBox="0 0 60 70" aria-hidden="true">
+                <use href="#rolly-mascot"></use>
+                <circle cx="23" cy="34" r="2.5" fill="#2C221E"></circle>
+                <circle cx="37" cy="34" r="2.5" fill="#2C221E"></circle>
+                <path d="M22 41 q8 10 16 0 z" fill="#2C221E"></path>
+              </svg>
+              <span class="font-extrabold text-ink text-base">Poople Answer Today</span>
+            </div>
+            <p class="text-xs text-ink-muted leading-relaxed">
+              Your ultimate daily companion solver and strategy hub for Poople word ladder players.
+            </p>
+          </div>
+
+          <div>
+            <h4 class="font-bold text-ink text-xs uppercase tracking-wider mb-3">Puzzles & Tools</h4>
+            <ul class="space-y-2 text-xs">
+              <li><a href="/" class="hover:text-brand transition-colors">Today's Answer</a></li>
+              <li><a href="/solver" class="hover:text-brand transition-colors">Poople Solver</a></li>
+              <li><a href="/unlimited" class="hover:text-brand transition-colors">Unlimited Practice</a></li>
+              <li><a href="/archive" class="hover:text-brand transition-colors">Daily Archive</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-bold text-ink text-xs uppercase tracking-wider mb-3">Guides & Strategy</h4>
+            <ul class="space-y-2 text-xs">
+              <li><a href="/words-to-poop" class="hover:text-brand transition-colors">Words to POOP (Cheat Sheet)</a></li>
+              <li><a href="/strategy" class="hover:text-brand transition-colors">7 Winning Strategies</a></li>
+              <li><a href="/what-is-poople" class="hover:text-brand transition-colors">What is Poople?</a></li>
+              <li><a href="/wordle-vs-poople" class="hover:text-brand transition-colors">Poople vs Wordle</a></li>
+              <li><a href="/how-to-play" class="hover:text-brand transition-colors">How to Play & Rules</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-bold text-ink text-xs uppercase tracking-wider mb-3">About & Legal</h4>
+            <ul class="space-y-2 text-xs">
+              <li><a href="/about" class="hover:text-brand transition-colors">About Us</a></li>
+              <li><a href="/privacy" class="hover:text-brand transition-colors">Privacy Policy</a></li>
+              <li><a href="/terms" class="hover:text-brand transition-colors">Terms of Service</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+
+          <p>© {new Date().getFullYear()} poopleanswertoday.com. All rights reserved.</p>
+          <p>Unofficial fan resource. Not affiliated with the official game at <a href="https://poople.io" target="_blank" rel="noopener noreferrer" class="underline hover:text-ink">poople.io</a>.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script is:inline>
+      const btn = document.getElementById('mobile-menu-btn');
+      const menu = document.getElementById('mobile-menu');
+      if (btn && menu) {
+        btn.addEventListener('click', () => {
+          menu.classList.toggle('hidden');
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,120 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const pageTitle = 'Poople Strategy & Tips: 7 Pro Tricks to Cut Your Step Count';
+const pageDescription = 'Master Poople with 7 proven word ladder strategies: bi-directional search, vowel bridge words, avoiding branch traps, and shortest path techniques.';
+
+const schemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: '7 Winning Strategies for Poople Word Ladders',
+    description: 'Expert tips and algorithmic concepts for finding the shortest path in daily Poople puzzles.',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://poopleanswertoday.com' },
+      { '@type': 'ListItem', position: 2, name: 'Strategy Guide', item: 'https://poopleanswertoday.com/strategy' },
+    ],
+  },
+];
+---
+
+<Layout title={pageTitle} description={pageDescription} schema={schemas}>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
+    <div class="text-center space-y-3">
+      <div class="inline-flex items-center gap-2">
+        <span class="px-3 py-1 bg-brand/10 text-brand text-xs font-black rounded-full uppercase tracking-wider">
+          Masterclass & Tactics
+        </span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-black text-ink tracking-tight">
+        Poople <span class="text-brand">Strategy Guide</span>: 7 Pro Tips
+      </h1>
+      <p class="text-base text-ink-muted">
+        Cut your average step count and discover shortest word ladder paths with these proven strategies.
+      </p>
+    </div>
+
+    <article class="bg-white border-2 border-paper-border rounded-2xl p-6 sm:p-10 shadow-warm-md space-y-8 text-sm sm:text-base leading-relaxed text-ink">
+      <!-- Tip 1 -->
+      <section class="space-y-2">
+        <h2 class="text-lg sm:text-xl font-black text-ink flex items-center gap-2">
+          <span class="w-7 h-7 rounded-full bg-brand text-white flex items-center justify-center text-xs">1</span>
+          <span>Use Bi-Directional Thinking (Meet in the Middle)</span>
+        </h2>
+        <p class="text-ink-muted">
+          Don't just look forward from the starting word. Look backwards from <strong>POOP</strong> simultaneously! Identify which of the 1-step gateway words (like <code>PROP</code>, <code>PLOP</code>, <code>POLE</code>, <code>PORT</code>) is easiest to bridge toward from your current position.
+        </p>
+      </section>
+
+      <!-- Tip 2 -->
+      <section class="space-y-2">
+        <h2 class="text-lg sm:text-xl font-black text-ink flex items-center gap-2">
+          <span class="w-7 h-7 rounded-full bg-brand text-white flex items-center justify-center text-xs">2</span>
+          <span>Master "Vowel Pivot" Words</span>
+        </h2>
+        <p class="text-ink-muted">
+          The letters <code class="font-bold">O</code> and <code class="font-bold">E</code> are the most connected vowel hubs in 4-letter English words. Words like <code>POLE</code>, <code>PAGE</code>, <code>PAVE</code>, and <code>PEEP</code> act as super-hubs to pivot from consonants like D, K, T, or S into the double-O required for POOP.
+        </p>
+      </section>
+
+      <!-- Tip 3 -->
+      <section class="space-y-2">
+        <h2 class="text-lg sm:text-xl font-black text-ink flex items-center gap-2">
+          <span class="w-7 h-7 rounded-full bg-brand text-white flex items-center justify-center text-xs">3</span>
+          <span>Beware of S-Ending Plural Traps</span>
+        </h2>
+        <p class="text-ink-muted">
+          Adding an <code>S</code> at the end (e.g. <code>ICES</code>, <code>TEES</code>, <code>FOES</code>) is often tempting, but <code>POOP</code> ends with a <strong>P</strong>, not an <strong>S</strong>. Moving toward words ending in <code>P</code> (like <code>APED</code> → <code>SPED</code> → <code>PLOD</code> → <code>PLOP</code>) gets you closer much faster.
+        </p>
+      </section>
+
+      <!-- Tip 4 -->
+      <section class="space-y-2">
+        <h2 class="text-lg sm:text-xl font-black text-ink flex items-center gap-2">
+          <span class="w-7 h-7 rounded-full bg-brand text-white flex items-center justify-center text-xs">4</span>
+          <span>Look for the Double-Letter Bridge</span>
+        </h2>
+        <p class="text-ink-muted">
+          Since <code>POOP</code> contains double <code>OO</code>, look for intermediate words that already share double letters: <code>PEEP</code>, <code>TEES</code>, <code>WOOD</code>, <code>MOON</code>, <code>BOOT</code>, <code>BOOK</code>, <code>POOR</code>. Transitioning through a double-letter word cuts ladder depth in half.
+        </p>
+      </section>
+
+      <!-- Tip 5 -->
+      <section class="space-y-2">
+        <h2 class="text-lg sm:text-xl font-black text-ink flex items-center gap-2">
+          <span class="w-7 h-7 rounded-full bg-brand text-white flex items-center justify-center text-xs">5</span>
+          <span>Check the Stink-O-Meter Distance</span>
+        </h2>
+        <p class="text-ink-muted">
+          When practicing in our <a href="/unlimited" class="text-brand font-bold underline">Unlimited Mode</a>, watch the Stink-O-Meter bar. If your move decreases the bar, you just hit a detour. Revert and try another branch.
+        </p>
+      </section>
+
+      <!-- Tip 6 -->
+      <section class="space-y-2">
+        <h2 class="text-lg sm:text-xl font-black text-ink flex items-center gap-2">
+          <span class="w-7 h-7 rounded-full bg-brand text-white flex items-center justify-center text-xs">6</span>
+          <span>Study Past Optimal Solutions</span>
+        </h2>
+        <p class="text-ink-muted">
+          Browse our <a href="/archive" class="text-brand font-bold underline">Poople Archive</a> to see how tricky past starting words (like <code>FUNK</code> or <code>GAGE</code>) navigated bottlenecks. You'll begin recognizing reusable transitional clusters.
+        </p>
+      </section>
+
+      <!-- Tip 7 -->
+      <section class="space-y-2">
+        <h2 class="text-lg sm:text-xl font-black text-ink flex items-center gap-2">
+          <span class="w-7 h-7 rounded-full bg-brand text-white flex items-center justify-center text-xs">7</span>
+          <span>When Completely Stuck, Use the Solver</span>
+        </h2>
+        <p class="text-ink-muted">
+          Don't let frustration ruin the fun! Enter your current word into our <a href="/solver" class="text-brand font-bold underline">Free Poople Solver</a> to see every viable branch forward.
+        </p>
+      </section>
+    </article>
+  </div>
+</Layout>

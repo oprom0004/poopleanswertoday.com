@@ -1,0 +1,110 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const pageTitle = 'What is Poople? The Viral Daily Word Ladder Game Explained';
+const pageDescription = 'What is Poople? Discover the viral daily word ladder game where players turn a 4-letter word into POOP. Learn its history, mechanics, and why it is trending.';
+
+const schemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: 'What is Poople? The Daily Word Ladder Phenomenon',
+    description: 'An in-depth explanation of the daily word ladder game Poople, its origins, mechanics, and viral popularity.',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://poopleanswertoday.com' },
+      { '@type': 'ListItem', position: 2, name: 'What is Poople', item: 'https://poopleanswertoday.com/what-is-poople' },
+    ],
+  },
+];
+---
+
+<Layout title={pageTitle} description={pageDescription} schema={schemas}>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
+    <div class="text-center space-y-3">
+      <div class="inline-flex items-center gap-2">
+        <span class="px-3 py-1 bg-brand/10 text-brand text-xs font-black rounded-full uppercase tracking-wider">
+          Game Guide & Origins
+        </span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-black text-ink tracking-tight">
+        What is <span class="text-brand">Poople</span>?
+      </h1>
+      <p class="text-base text-ink-muted">
+        Everything you need to know about the addictive daily word ladder puzzle that took the internet by storm.
+      </p>
+    </div>
+
+    <article class="bg-white border-2 border-paper-border rounded-2xl p-6 sm:p-10 shadow-warm-md space-y-8 text-sm sm:text-base leading-relaxed text-ink">
+      <!-- Section 1 -->
+      <section class="space-y-3">
+        <h2 class="text-xl font-black text-ink border-b border-paper-border pb-2">
+          💩 A Brief Introduction to Poople
+        </h2>
+        <p>
+          <strong>Poople</strong> is a free, web-based daily word puzzle that puts a humorous and challenging spin on classic <strong>word ladder</strong> puzzles. 
+        </p>
+        <p>
+          In Poople, players are presented with a new <strong>4-letter starting word</strong> every day at <strong>08:00 UTC</strong>. The sole objective is to transform that starting word into the target word <strong class="text-brand">POOP</strong> by swapping exactly one letter at a time. Every intermediary step must form a legitimate, recognized 4-letter English word.
+        </p>
+      </section>
+
+      <!-- Section 2: History -->
+      <section class="space-y-3">
+        <h2 class="text-xl font-black text-ink border-b border-paper-border pb-2">
+          📜 The History of Word Ladders (Lewis Carroll)
+        </h2>
+        <p>
+          While Poople is modern and quirky, its underlying puzzle mechanic is over 140 years old! The concept was originally invented on Christmas Day in 1877 by <strong>Lewis Carroll</strong> (author of <em>Alice's Adventures in Wonderland</em>), who called the game <em>"Doublets"</em> or <em>"Word-links"</em>.
+        </p>
+        <p>
+          Carroll published puzzles in <em>Vanity Fair</em> magazine, challenging Victorian readers to turn <code>HEAD</code> into <code>TAIL</code> or <code>COLD</code> into <code>WARM</code>. Poople brings this timeless mathematical and linguistic challenge to modern daily puzzle fans.
+        </p>
+      </section>
+
+      <!-- Section 3: Why Poople is Viral -->
+      <section class="space-y-3">
+        <h2 class="text-xl font-black text-ink border-b border-paper-border pb-2">
+          🔥 Why is Poople So Popular?
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+          <div class="p-4 bg-paper-dark rounded-xl border border-paper-border">
+            <h3 class="font-bold text-ink mb-1">1. Low Floor, High Ceiling</h3>
+            <p class="text-xs text-ink-muted leading-normal">
+              Easy to understand in 5 seconds, but finding the true mathematically shortest path requires deep vocabulary planning.
+            </p>
+          </div>
+          <div class="p-4 bg-paper-dark rounded-xl border border-paper-border">
+            <h3 class="font-bold text-ink mb-1">2. Daily Synchronized Drops</h3>
+            <p class="text-xs text-ink-muted leading-normal">
+              Everyone around the world plays the exact same puzzle simultaneously at 08:00 UTC, creating a vibrant shared community.
+            </p>
+          </div>
+          <div class="p-4 bg-paper-dark rounded-xl border border-paper-border">
+            <h3 class="font-bold text-ink mb-1">3. Humorous Theme</h3>
+            <p class="text-xs text-ink-muted leading-normal">
+              The goal of reaching "POOP" alongside toilet roll animations adds lighthearted charm compared to traditional dry crosswords.
+            </p>
+          </div>
+          <div class="p-4 bg-paper-dark rounded-xl border border-paper-border">
+            <h3 class="font-bold text-ink mb-1">4. Shareable Emoji Results</h3>
+            <p class="text-xs text-ink-muted leading-normal">
+              Like Wordle, players can share spoiler-free emoji ladders on Twitter and group chats to show off their step count.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Where to play -->
+      <section class="space-y-3 bg-paper-dark p-5 rounded-xl border border-paper-border">
+        <h3 class="font-black text-ink text-base">Where can I play?</h3>
+        <p class="text-xs sm:text-sm text-ink-muted">
+          You can play the official game daily at <a href="https://poople.io" target="_blank" rel="noopener noreferrer" class="text-brand font-bold underline">poople.io</a>, or practice unlimited rounds with hints right here on <a href="/" class="text-brand font-bold underline">poopleanswertoday.com</a>.
+        </p>
+      </section>
+    </article>
+  </div>
+</Layout>

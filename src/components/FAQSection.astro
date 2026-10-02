@@ -1,0 +1,93 @@
+---
+import type { DailyPuzzle } from '../lib/daily';
+
+interface Props {
+  puzzle: DailyPuzzle;
+  yesterdayPuzzle?: DailyPuzzle;
+}
+
+const { puzzle, yesterdayPuzzle } = Astro.props;
+---
+
+<section class="bg-white border-2 border-paper-border rounded-2xl p-5 sm:p-7 shadow-warm-md" aria-labelledby="faq-heading">
+  <div class="mb-5">
+    <h2 id="faq-heading" class="text-xl sm:text-2xl font-black text-ink flex items-center gap-2 mb-1">
+      <span>❓</span> Frequently Asked Questions (FAQ)
+    </h2>
+    <p class="text-sm text-ink-muted">
+      Everything you need to know about today's Poople puzzle, hints, and game rules.
+    </p>
+  </div>
+
+  <div class="space-y-3">
+    <!-- Q1: Today's Answer -->
+    <details class="group border border-paper-border rounded-xl bg-paper-bg overflow-hidden" open>
+      <summary class="flex items-center justify-between p-4 cursor-pointer font-bold text-sm sm:text-base select-none hover:bg-paper-dark/60 transition-colors">
+        <span>What is today's Poople answer?</span>
+        <span class="text-xs font-bold text-brand group-open:hidden">+</span>
+        <span class="text-xs font-bold text-ink-muted hidden group-open:inline">−</span>
+      </summary>
+      <div class="px-4 pb-4 pt-1 text-sm border-t border-paper-border/60 bg-white leading-relaxed text-ink">
+        Today's Poople (#{puzzle.number}, {puzzle.displayDate}) starts from <strong>{puzzle.startWord}</strong> and takes <strong>{puzzle.solution.minSteps} steps</strong> to reach POOP: 
+        <br />
+        <span class="font-mono-tile font-bold text-brand mt-1 block">
+          {puzzle.solution.optimalPath.join(' → ')}
+        </span>
+      </div>
+    </details>
+
+    <!-- Q2: Yesterday's Answer -->
+    {yesterdayPuzzle && (
+      <details class="group border border-paper-border rounded-xl bg-paper-bg overflow-hidden">
+        <summary class="flex items-center justify-between p-4 cursor-pointer font-bold text-sm sm:text-base select-none hover:bg-paper-dark/60 transition-colors">
+          <span>What was yesterday's Poople answer?</span>
+          <span class="text-xs font-bold text-brand group-open:hidden">+</span>
+          <span class="text-xs font-bold text-ink-muted hidden group-open:inline">−</span>
+        </summary>
+        <div class="px-4 pb-4 pt-1 text-sm border-t border-paper-border/60 bg-white leading-relaxed text-ink">
+          Yesterday's Poople (#{yesterdayPuzzle.number}, {yesterdayPuzzle.displayDate}) started from <strong>{yesterdayPuzzle.startWord}</strong> and took <strong>{yesterdayPuzzle.solution.minSteps} steps</strong>:
+          <br />
+          <span class="font-mono-tile font-bold text-brand mt-1 block">
+            {yesterdayPuzzle.solution.optimalPath.join(' → ')}
+          </span>
+        </div>
+      </details>
+    )}
+
+    <!-- Q3: What is Poople -->
+    <details class="group border border-paper-border rounded-xl bg-paper-bg overflow-hidden">
+      <summary class="flex items-center justify-between p-4 cursor-pointer font-bold text-sm sm:text-base select-none hover:bg-paper-dark/60 transition-colors">
+        <span>What is Poople and how does it work?</span>
+        <span class="text-xs font-bold text-brand group-open:hidden">+</span>
+        <span class="text-xs font-bold text-ink-muted hidden group-open:inline">−</span>
+      </summary>
+      <div class="px-4 pb-4 pt-1 text-sm border-t border-paper-border/60 bg-white leading-relaxed text-ink">
+        Poople is a daily word ladder puzzle game. Players start with a 4-letter starting word and must reach the target word <strong>POOP</strong> in as few moves as possible by changing exactly one letter at each step. Each intermediary word must be a valid English word in the game dictionary.
+      </div>
+    </details>
+
+    <!-- Q4: Reset Time -->
+    <details class="group border border-paper-border rounded-xl bg-paper-bg overflow-hidden">
+      <summary class="flex items-center justify-between p-4 cursor-pointer font-bold text-sm sm:text-base select-none hover:bg-paper-dark/60 transition-colors">
+        <span>When does the new daily Poople answer reset?</span>
+        <span class="text-xs font-bold text-brand group-open:hidden">+</span>
+        <span class="text-xs font-bold text-ink-muted hidden group-open:inline">−</span>
+      </summary>
+      <div class="px-4 pb-4 pt-1 text-sm border-t border-paper-border/60 bg-white leading-relaxed text-ink">
+        A new Poople puzzle drops every day at <strong>08:00 UTC</strong> (Coordinated Universal Time). Our solver and hints update automatically right after the new puzzle goes live.
+      </div>
+    </details>
+
+    <!-- Q5: Official site -->
+    <details class="group border border-paper-border rounded-xl bg-paper-bg overflow-hidden">
+      <summary class="flex items-center justify-between p-4 cursor-pointer font-bold text-sm sm:text-base select-none hover:bg-paper-dark/60 transition-colors">
+        <span>Is this website official?</span>
+        <span class="text-xs font-bold text-brand group-open:hidden">+</span>
+        <span class="text-xs font-bold text-ink-muted hidden group-open:inline">−</span>
+      </summary>
+      <div class="px-4 pb-4 pt-1 text-sm border-t border-paper-border/60 bg-white leading-relaxed text-ink">
+        No, <a href="/" class="text-brand underline font-bold">PoopleAnswerToday.com</a> is an independent educational fan resource and companion solver designed to help players learn word-ladder strategies. You can play the official game at <a href="https://poople.io" target="_blank" rel="noopener noreferrer" class="text-brand underline font-bold">poople.io</a>.
+      </div>
+    </details>
+  </div>
+</section>

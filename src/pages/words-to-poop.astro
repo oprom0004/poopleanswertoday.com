@@ -1,0 +1,158 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getNeighbors } from '../lib/solver';
+import { WORD_SET, WORD_DEFINITIONS } from '../lib/dictionary';
+
+// All 1-step gateway words directly connected to POOP
+const directWords = getNeighbors('poop', WORD_SET).map(w => w.toUpperCase()).sort();
+
+// Group direct words by changed position
+const gatewayByPos: Record<number, string[]> = { 1: [], 2: [], 3: [], 4: [] };
+directWords.forEach(word => {
+  if (word[0] !== 'P') gatewayByPos[1].push(word);
+  else if (word[1] !== 'O') gatewayByPos[2].push(word);
+  else if (word[2] !== 'O') gatewayByPos[3].push(word);
+  else if (word[3] !== 'P') gatewayByPos[4].push(word);
+});
+
+const pageTitle = 'Words to POOP: Complete 4-Letter Gateway Word List & Cheat Sheet';
+const pageDescription = 'The ultimate cheat sheet of 4-letter words that connect directly to POOP in Poople. Learn every 1-step and 2-step gateway bridge word with definitions.';
+
+const schemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: 'Words that Connect to POOP: Complete Gateway Word List',
+    description: 'A comprehensive reference list of all 4-letter English words that can transition directly into POOP in one step.',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://poopleanswertoday.com' },
+      { '@type': 'ListItem', position: 2, name: 'Words to POOP', item: 'https://poopleanswertoday.com/words-to-poop' },
+    ],
+  },
+];
+---
+
+<Layout title={pageTitle} description={pageDescription} schema={schemas}>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
+    <div class="text-center space-y-3">
+      <div class="inline-flex items-center gap-2">
+        <span class="px-3 py-1 bg-amber-100 text-amber-900 text-xs font-black rounded-full uppercase tracking-wider">
+          Cheat Sheet & Strategy Matrix
+        </span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-black text-ink tracking-tight">
+        Words That Connect Directly to <span class="text-brand">POOP</span>
+      </h1>
+      <p class="text-sm sm:text-base text-ink-muted max-w-2xl mx-auto">
+        Every Poople puzzle must end through one of these <strong>{directWords.length} critical gateway words</strong>. Master these words to solve any ladder in fewer steps!
+      </p>
+    </div>
+
+    <!-- Quick Gateway Words Grid -->
+    <section class="bg-white border-2 border-paper-border rounded-2xl p-6 sm:p-8 shadow-warm-md space-y-6">
+      <div class="flex items-center justify-between pb-3 border-b border-paper-border">
+        <h2 class="text-xl font-black text-ink flex items-center gap-2">
+          <span>🚪</span> 1-Step Gateway Words (Direct to POOP)
+        </h2>
+        <span class="text-xs font-bold px-2.5 py-1 bg-green-100 text-green-900 rounded-full">
+          {directWords.length} Words Total
+        </span>
+      </div>
+
+      <p class="text-sm text-ink-muted leading-relaxed">
+        If your word ladder reaches any of the following 4-letter words, you are exactly <strong>1 move away</strong> from victory!
+      </p>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        {directWords.map((word) => (
+          <div class="p-3 bg-paper-dark border border-paper-border rounded-xl flex flex-col justify-between hover:border-brand/50 transition-colors">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="font-mono-tile font-black text-lg text-brand-dark">{word}</span>
+              <span class="text-[10px] font-bold px-1.5 py-0.5 bg-white text-ink-muted rounded border border-paper-border">
+                1 step
+              </span>
+            </div>
+            {WORD_DEFINITIONS[word.toLowerCase()] && (
+              <p class="text-[11px] text-ink-muted line-clamp-2 leading-tight">
+                {WORD_DEFINITIONS[word.toLowerCase()]}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Strategy Breakdown by Changed Letter Position -->
+    <section class="bg-white border-2 border-paper-border rounded-2xl p-6 sm:p-8 shadow-warm-md space-y-6">
+      <h2 class="text-xl font-black text-ink flex items-center gap-2 border-b border-paper-border pb-3">
+        <span>🧩</span> Gateway Words by Position Changed
+      </h2>
+
+      <div class="space-y-4">
+        <!-- Position 1 -->
+        <div class="p-4 bg-paper-bg rounded-xl border border-paper-border space-y-2">
+          <h3 class="font-bold text-sm text-ink flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-brand text-white flex items-center justify-center text-xs">1</span>
+            <span>Change 1st Letter (_OOP → POOP):</span>
+          </h3>
+          <div class="flex flex-wrap gap-2">
+            {gatewayByPos[1].length > 0 ? (
+              gatewayByPos[1].map((w) => (
+                <span class="px-2.5 py-1 bg-white border border-paper-border font-mono-tile font-bold text-sm rounded-lg text-ink">
+                  {w}
+                </span>
+              ))
+            ) : (
+              <span class="text-xs text-ink-muted italic">None common in standard dictionary.</span>
+            )}
+          </div>
+        </div>
+
+        <!-- Position 2 -->
+        <div class="p-4 bg-paper-bg rounded-xl border border-paper-border space-y-2">
+          <h3 class="font-bold text-sm text-ink flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-brand text-white flex items-center justify-center text-xs">2</span>
+            <span>Change 2nd Letter (P_OP → POOP):</span>
+          </h3>
+          <div class="flex flex-wrap gap-2">
+            {gatewayByPos[2].map((w) => (
+              <span class="px-2.5 py-1 bg-white border border-paper-border font-mono-tile font-bold text-sm rounded-lg text-ink">
+                {w}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <!-- Position 4 -->
+        <div class="p-4 bg-paper-bg rounded-xl border border-paper-border space-y-2">
+          <h3 class="font-bold text-sm text-ink flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-brand text-white flex items-center justify-center text-xs">4</span>
+            <span>Change 4th Letter (POO_ → POOP):</span>
+          </h3>
+          <div class="flex flex-wrap gap-2">
+            {gatewayByPos[4].map((w) => (
+              <span class="px-2.5 py-1 bg-white border border-paper-border font-mono-tile font-bold text-sm rounded-lg text-ink">
+                {w}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Internal CTA Box -->
+    <div class="p-6 bg-brand/5 border-2 border-brand/20 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <h3 class="font-black text-ink text-base">Want to test any word?</h3>
+        <p class="text-xs sm:text-sm text-ink-muted">Use our universal solver to calculate the fastest path from any word.</p>
+      </div>
+      <a href="/solver" class="px-5 py-2.5 bg-brand text-white font-bold text-xs rounded-xl shadow-warm-sm hover:bg-brand-dark transition-all whitespace-nowrap">
+        Open Poople Solver →
+      </a>
+    </div>
+  </div>
+</Layout>

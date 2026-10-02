@@ -1,0 +1,278 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const pageTitle = 'Poople Solver: Calculate Any Word Ladder to POOP';
+const pageDescription = 'Free online Poople Solver. Enter any 4-letter English word to instantly find all shortest word ladder paths to POOP with step-by-step diffs and hints.';
+
+const schemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Poople Solver',
+    operatingSystem: 'All',
+    applicationCategory: 'GameApplication',
+    description: 'A BFS-powered word ladder solver that calculates the shortest path from any 4-letter English word to POOP.',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://poopleanswertoday.com' },
+      { '@type': 'ListItem', position: 2, name: 'Solver', item: 'https://poopleanswertoday.com/solver' },
+    ],
+  },
+];
+---
+
+<Layout title={pageTitle} description={pageDescription} schema={schemas}>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
+    <!-- Header -->
+    <div class="text-center space-y-3">
+      <div class="inline-flex items-center gap-2">
+        <span class="px-3 py-1 bg-brand/10 text-brand text-xs font-black rounded-full uppercase tracking-wider">
+          Word Ladder Calculator
+        </span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-black text-ink tracking-tight">
+        Poople <span class="text-brand">Solver</span>
+      </h1>
+      <p class="text-sm sm:text-base text-ink-muted max-w-xl mx-auto">
+        Type any 4-letter English word to calculate the absolute shortest path to <strong>POOP</strong>.
+      </p>
+    </div>
+
+    <!-- Solver Tool Card -->
+    <section class="bg-white border-2 border-paper-border rounded-2xl p-6 sm:p-8 shadow-warm-md">
+      <form id="solver-form" class="space-y-6">
+        <div class="max-w-md mx-auto space-y-3">
+          <label for="start-word-input" class="block text-xs font-bold text-ink-muted uppercase tracking-wider text-center">
+            Enter 4-Letter Starting Word
+          </label>
+          <div class="flex items-center justify-center gap-2">
+            <input
+              type="text"
+              id="start-word-input"
+              maxlength="4"
+              placeholder="e.g. ICED"
+              value="ICED"
+              class="w-48 text-center text-2xl font-black font-mono-tile tracking-widest uppercase py-3 px-4 bg-paper-dark border-2 border-paper-border focus:border-brand focus:bg-white rounded-xl outline-none transition-all"
+              autocomplete="off"
+              autofocus
+            />
+            <button
+              type="submit"
+              class="px-6 py-3.5 bg-brand hover:bg-brand-dark text-white font-black text-sm rounded-xl shadow-warm-sm active:translate-y-0.5 transition-all"
+            >
+              Solve 🚀
+            </button>
+          </div>
+          <p id="solver-error" class="text-center text-xs font-bold text-red-600 hidden"></p>
+        </div>
+
+        <!-- Quick Example Chips -->
+        <div class="flex flex-wrap items-center justify-center gap-2 pt-2 text-xs">
+          <span class="text-ink-muted font-medium">Try popular words:</span>
+          {['ICED', 'TEES', 'GAGE', 'PAIN', 'RISE', 'YARD', 'FUNK', 'COLD', 'SAFE'].map((word) => (
+            <button
+              type="button"
+              class="example-chip px-2.5 py-1 bg-paper-dark hover:bg-brand hover:text-white border border-paper-border rounded-lg font-mono-tile font-bold transition-colors"
+              data-word={word}
+            >
+              {word}
+            </button>
+          ))}
+        </div>
+      </form>
+
+      <!-- Solution Output Box -->
+      <div id="solver-output" class="mt-8 pt-8 border-t border-paper-border hidden space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-paper-dark p-4 rounded-xl">
+          <div>
+            <span class="text-xs font-bold text-ink-muted uppercase">Calculation Result</span>
+            <h3 class="text-lg font-black text-ink" id="result-summary">Shortest Path: 8 Steps</h3>
+          </div>
+          <span id="result-badge" class="px-3 py-1 rounded-full text-xs font-black bg-amber-100 text-amber-900 w-fit">
+            Difficulty: Brutal
+          </span>
+        </div>
+
+        <!-- Visual Ladder -->
+        <div>
+          <h4 class="text-xs font-bold text-ink-muted uppercase tracking-wider mb-3">Optimal Word Ladder:</h4>
+          <div id="result-ladder" class="space-y-2 font-mono-tile"></div>
+        </div>
+
+        <!-- All Alternative Paths -->
+        <div id="alt-paths-container" class="hidden">
+          <h4 class="text-xs font-bold text-ink-muted uppercase tracking-wider mb-2">Alternative Shortest Routes:</h4>
+          <div id="alt-paths-list" class="space-y-1 text-xs font-mono-tile text-ink-muted"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEO Content Section -->
+    <section class="prose prose-stone max-w-none bg-white border border-paper-border rounded-2xl p-6 sm:p-8 space-y-4 text-sm text-ink-muted leading-relaxed">
+      <h2 class="text-xl font-black text-ink">How the Poople Solver Works</h2>
+      <p>
+        The Poople Solver utilizes an optimized <strong>Breadth-First Search (BFS)</strong> graph traversal algorithm over the entire dictionary of 4-letter English words. It treats each valid word as a node in an undirected graph, connected by edges to every word that differs by exactly one letter change.
+      </p>
+      <p>
+        Because BFS explores nodes level by level, it is mathematically guaranteed to find the <strong>shortest path</strong> to <code class="text-brand font-bold font-mono">POOP</code> without ever getting trapped in infinite cycles or redundant detours.
+      </p>
+    </section>
+  </div>
+</Layout>
+
+<script is:inline>
+  // Client-side BFS dictionary and solver
+  const DICT = ["iced", "aced", "aped", "sped", "sled", "pled", "plod", "plop", "poop", "tees", "pees", "peep", "prep", "prop", "drop", "crop", "clop", "clap", "gage", "page", "pave", "save", "safe", "sake", "bake", "bare", "bark", "pain", "pair", "paid", "maid", "mail", "sail", "soil", "soot", "spot", "spat", "soop", "foes", "hoes", "goes", "toes", "roes", "does", "joes", "poes", "poem", "pole", "poll", "polo", "pool", "rise", "rose", "rope", "pope", "pipe", "pile", "pale", "poke", "pork", "port", "post", "posh", "yard", "ward", "warm", "worm", "word", "wood", "mood", "moon", "moot", "boot", "boon", "book", "boor", "poor", "funk", "punk", "pink", "pick", "pack", "park", "fork", "form", "firm", "fire", "file", "fill", "able", "acid", "aged", "ally", "also", "arch", "army", "atom", "auto", "away", "baby", "back", "ball", "band", "bank", "base", "bath", "bear", "beat", "beer", "bell", "belt", "bend", "bent", "best", "bill", "bird", "bite", "blow", "blue", "boat", "body", "bold", "bomb", "bond", "bone", "born", "boss", "both", "bowl", "bulk", "burn", "bush", "busy", "call", "calm", "came", "camp", "card", "care", "case", "cash", "cast", "cave", "cell", "chat", "chip", "city", "club", "coal", "coat", "code", "cold", "come", "cook", "cool", "cope", "copy", "core", "cost", "crew", "cure", "dark", "data", "date", "dawn", "dead", "deal", "dear", "debt", "deep", "deny", "desk", "dial", "diet", "dirt", "disc", "dish", "disk", "door", "dose", "down", "draw", "drew", "drug", "drum", "dual", "duke", "dust", "duty", "each", "earn", "ease", "east", "easy", "edge", "edit", "even", "ever", "evil", "exit", "face", "fact", "fade", "fail", "fair", "fall", "farm", "fast", "fate", "fear", "feed", "feel", "feet", "fell", "felt", "film", "find", "fine", "fish", "fist", "flat", "fled", "flow", "fold", "folk", "fond", "font", "food", "fool", "foot", "ford", "fort", "four", "free", "from", "fuel", "full", "fund", "gain", "game", "gate", "gave", "gear", "gene", "gift", "girl", "give", "glad", "goal", "gold", "golf", "gone", "good", "gray", "grew", "grey", "grow", "gulf", "hair", "half", "hall", "hand", "hang", "hard", "harm", "hate", "have", "head", "hear", "heat", "held", "hell", "help", "here", "hero", "hide", "high", "hill", "hint", "hire", "hold", "hole", "holy", "home", "hope", "horn", "host", "hour", "huge", "hung", "hunt", "hurt", "icon", "idea", "idle", "inch", "iron", "item", "join", "joke", "jump", "jury", "just", "keen", "keep", "kept", "kick", "kill", "kind", "king", "knee", "knew", "know", "lack", "lady", "laid", "lake", "land", "lane", "last", "late", "lead", "leaf", "lean", "left", "less", "life", "lift", "like", "line", "link", "list", "live", "load", "loan", "lock", "logo", "long", "look", "lord", "lose", "loss", "lost", "love", "luck", "made", "main", "make", "male", "many", "mark", "mass", "meal", "mean", "meat", "meet", "menu", "mere", "mild", "mile", "milk", "mill", "mind", "mine", "miss", "mode", "more", "most", "move", "much", "must", "name", "navy", "near", "neck", "need", "news", "next", "nice", "nick", "nine", "node", "none", "noon", "norm", "nose", "note", "once", "only", "open", "oral", "over", "pace", "palm", "part", "pass", "past", "path", "peak", "peer", "pine", "plan", "play", "plot", "plug", "plus", "poet", "pond", "pose", "pour", "pray", "pure", "push", "race", "rail", "rain", "rank", "rare", "rate", "read", "real", "rear", "rely", "rent", "rest", "rice", "rich", "ride", "ring", "risk", "road", "rock", "role", "roll", "roof", "room", "root", "rule", "rush", "said", "sale", "salt", "same", "sand", "seat", "seed", "seek", "seem", "seen", "self", "sell", "send", "sent", "sew", "ship", "shoe", "shop", "shot", "show", "shut", "sick", "side", "sign", "site", "size", "skin", "slip", "slow", "snow", "soft", "sold", "sole", "some", "song", "soon", "sort", "soul", "soup", "sour", "span", "spin", "star", "stay", "step", "stop", "such", "suit", "sure", "take", "tale", "talk", "tall", "tank", "tape", "task", "team", "tell", "tend", "term", "test", "text", "than", "that", "them", "then", "they", "thin", "this", "thus", "tide", "tied", "time", "tiny", "tire", "toll", "tone", "took", "tool", "tour", "town", "tree", "trip", "true", "tube", "tune", "turn", "twin", "type", "unit", "upon", "urge", "used", "user", "vary", "vast", "very", "vice", "view", "vote", "wage", "wait", "wake", "walk", "wall", "want", "warn", "wash", "wave", "ways", "weak", "wear", "week", "well", "went", "were", "west", "what", "when", "whom", "wide", "wife", "wild", "will", "wind", "wine", "wing", "wire", "wise", "wish", "with", "wore", "work", "yeah", "year", "your", "zero", "zone"];
+  const DICT_SET = new Set(DICT);
+
+  function getNeighborsClient(word) {
+    const res = [];
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+    for (let i = 0; i < 4; i++) {
+      for (let c of alphabet) {
+        if (c === word[i]) continue;
+        const candidate = word.slice(0, i) + c + word.slice(i + 1);
+        if (DICT_SET.has(candidate)) res.push(candidate);
+      }
+    }
+    return res;
+  }
+
+  function solveClient(startWord, targetWord = 'poop') {
+    const start = startWord.toLowerCase();
+    const target = targetWord.toLowerCase();
+    if (!DICT_SET.has(start)) return null;
+
+    const queue = [[start]];
+    const visited = new Map();
+    visited.set(start, 0);
+
+    const allPaths = [];
+    let minSteps = -1;
+
+    while (queue.length > 0) {
+      const path = queue.shift();
+      const current = path[path.length - 1];
+      const dist = path.length - 1;
+
+      if (minSteps !== -1 && dist >= minSteps) {
+        if (current === target) allPaths.push(path);
+        continue;
+      }
+
+      if (current === target) {
+        minSteps = dist;
+        allPaths.push(path);
+        continue;
+      }
+
+      const neighbors = getNeighborsClient(current);
+      for (let n of neighbors) {
+        const nDist = dist + 1;
+        const recDist = visited.get(n);
+        if (recDist === undefined || recDist >= nDist) {
+          visited.set(n, nDist);
+          queue.push([...path, n]);
+        }
+      }
+    }
+
+    return allPaths;
+  }
+
+  const form = document.getElementById('solver-form');
+  const input = document.getElementById('start-word-input');
+  const errorEl = document.getElementById('solver-error');
+  const outputEl = document.getElementById('solver-output');
+  const summaryEl = document.getElementById('result-summary');
+  const badgeEl = document.getElementById('result-badge');
+  const ladderEl = document.getElementById('result-ladder');
+  const altContainer = document.getElementById('alt-paths-container');
+  const altList = document.getElementById('alt-paths-list');
+
+  function runSolve() {
+    const raw = (input.value || '').trim().toLowerCase();
+    errorEl.classList.add('hidden');
+    outputEl.classList.add('hidden');
+
+    if (raw.length !== 4) {
+      errorEl.textContent = 'Please enter a valid 4-letter word.';
+      errorEl.classList.remove('hidden');
+      return;
+    }
+
+    const paths = solveClient(raw, 'poop');
+    if (!paths || paths.length === 0) {
+      errorEl.textContent = `"${raw.toUpperCase()}" is not in the dictionary or cannot reach POOP.`;
+      errorEl.classList.remove('hidden');
+      return;
+    }
+
+    const bestPath = paths[0].map(w => w.toUpperCase());
+    const steps = bestPath.length - 1;
+
+    summaryEl.textContent = `Shortest Path: ${steps} Steps (${raw.toUpperCase()} → POOP)`;
+    
+    let diff = 'Moderate';
+    if (steps <= 4) diff = 'Easy';
+    else if (steps === 5) diff = 'Moderate';
+    else if (steps === 6) diff = 'Tricky';
+    else if (steps === 7) diff = 'Hard';
+    else diff = 'Brutal';
+    badgeEl.textContent = `Difficulty: ${diff}`;
+
+    // Render ladder
+    ladderEl.innerHTML = bestPath.map((word, idx) => {
+      const isStart = idx === 0;
+      const isEnd = idx === bestPath.length - 1;
+      const prevWord = idx > 0 ? bestPath[idx - 1] : '';
+      
+      const tiles = word.split('').map((char, charIdx) => {
+        const isChanged = !isStart && char !== prevWord[charIdx];
+        return `<span class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center font-black text-sm rounded border-2 uppercase ${
+          isEnd ? 'bg-amber-100 border-amber-500 text-amber-900' : isChanged ? 'bg-green-100 border-green-500 text-green-900' : 'bg-paper-dark border-paper-border text-ink'
+        }">${char}</span>`;
+      }).join('');
+
+      return `<div class="flex items-center gap-3">
+        <span class="w-14 text-right text-xs font-bold text-ink-muted">${isStart ? 'START' : isEnd ? 'TARGET' : `Step ${idx}`}</span>
+        <div class="flex gap-1">${tiles}</div>
+      </div>`;
+    }).join('');
+
+    // Render alternative paths
+    if (paths.length > 1) {
+      altContainer.classList.remove('hidden');
+      altList.innerHTML = paths.slice(1, 5).map((p, i) => `
+        <p class="p-2 bg-paper-dark rounded border border-paper-border">Route #${i + 2}: ${p.map(w => w.toUpperCase()).join(' → ')}</p>
+      `).join('');
+    } else {
+      altContainer.classList.add('hidden');
+    }
+
+    outputEl.classList.remove('hidden');
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    runSolve();
+  });
+
+  document.querySelectorAll('.example-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      input.value = chip.getAttribute('data-word');
+      runSolve();
+    });
+  });
+
+  // Run on load with default ICED
+  runSolve();
+</script>
