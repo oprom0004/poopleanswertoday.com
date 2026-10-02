@@ -6,6 +6,7 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   schema?: Record<string, any>[];
+  noindex?: boolean;
 }
 
 const {
@@ -15,6 +16,7 @@ const {
   image = 'https://poopleanswertoday.com/og-image.png',
   type = 'website',
   schema = [],
+  noindex = false,
 } = Astro.props;
 
 const currentPath = Astro.url.pathname;
@@ -29,6 +31,12 @@ const currentPath = Astro.url.pathname;
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+
+    {noindex ? (
+      <meta name="robots" content="noindex, follow" />
+    ) : (
+      <meta name="robots" content="index, follow" />
+    )}
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={type} />
@@ -107,10 +115,10 @@ const currentPath = Astro.url.pathname;
         </a>
 
         <!-- Desktop Nav -->
-        <nav class="hidden md:flex items-center gap-1.5 text-sm font-semibold">
+        <nav class="hidden md:flex items-center gap-1 text-sm font-semibold">
           <a
             href="/"
-            class={`px-3.5 py-1.5 rounded-lg transition-colors ${
+            class={`px-3 py-1.5 rounded-lg transition-colors ${
               currentPath === '/' ? 'bg-brand text-white shadow-warm-sm' : 'text-ink-muted hover:text-ink hover:bg-paper-dark'
             }`}
           >
@@ -118,7 +126,7 @@ const currentPath = Astro.url.pathname;
           </a>
           <a
             href="/solver"
-            class={`px-3.5 py-1.5 rounded-lg transition-colors ${
+            class={`px-3 py-1.5 rounded-lg transition-colors ${
               currentPath === '/solver' ? 'bg-brand text-white shadow-warm-sm' : 'text-ink-muted hover:text-ink hover:bg-paper-dark'
             }`}
           >
@@ -126,25 +134,15 @@ const currentPath = Astro.url.pathname;
           </a>
           <a
             href="/unlimited"
-            class={`px-3.5 py-1.5 rounded-lg transition-colors ${
+            class={`px-3 py-1.5 rounded-lg transition-colors ${
               currentPath === '/unlimited' ? 'bg-brand text-white shadow-warm-sm' : 'text-ink-muted hover:text-ink hover:bg-paper-dark'
             }`}
           >
             Unlimited
           </a>
           <a
-            href="/archive"
-            class={`px-3.5 py-1.5 rounded-lg transition-colors ${
-              currentPath.startsWith('/archive') || currentPath.startsWith('/answer')
-                ? 'bg-brand text-white shadow-warm-sm'
-                : 'text-ink-muted hover:text-ink hover:bg-paper-dark'
-            }`}
-          >
-            Archive
-          </a>
-          <a
             href="/words-to-poop"
-            class={`px-3.5 py-1.5 rounded-lg transition-colors ${
+            class={`px-3 py-1.5 rounded-lg transition-colors ${
               currentPath === '/words-to-poop' ? 'bg-brand text-white shadow-warm-sm' : 'text-ink-muted hover:text-ink hover:bg-paper-dark'
             }`}
           >
@@ -152,13 +150,52 @@ const currentPath = Astro.url.pathname;
           </a>
           <a
             href="/strategy"
-            class={`px-3.5 py-1.5 rounded-lg transition-colors ${
+            class={`px-3 py-1.5 rounded-lg transition-colors ${
               currentPath === '/strategy' ? 'bg-brand text-white shadow-warm-sm' : 'text-ink-muted hover:text-ink hover:bg-paper-dark'
             }`}
           >
             Strategy
           </a>
+          <a
+            href="/archive"
+            class={`px-3 py-1.5 rounded-lg transition-colors ${
+              currentPath.startsWith('/archive') || currentPath.startsWith('/answer')
+                ? 'bg-brand text-white shadow-warm-sm'
+                : 'text-ink-muted hover:text-ink hover:bg-paper-dark'
+            }`}
+          >
+            Archive
+          </a>
+
+          <!-- Guides Dropdown -->
+          <div class="relative group">
+            <button
+              type="button"
+              class={`px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors ${
+                ['/what-is-poople', '/wordle-vs-poople', '/how-to-play'].includes(currentPath)
+                  ? 'bg-brand text-white shadow-warm-sm'
+                  : 'text-ink-muted hover:text-ink hover:bg-paper-dark'
+              }`}
+            >
+              <span>Guides</span>
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div class="absolute right-0 top-full mt-1 hidden group-hover:block w-48 bg-white border border-paper-border rounded-xl shadow-warm-md p-1.5 z-50">
+              <a href="/what-is-poople" class="block px-3 py-2 text-xs font-bold rounded-lg hover:bg-paper-dark text-ink">
+                📖 What is Poople?
+              </a>
+              <a href="/wordle-vs-poople" class="block px-3 py-2 text-xs font-bold rounded-lg hover:bg-paper-dark text-ink">
+                ⚔️ Poople vs Wordle
+              </a>
+              <a href="/how-to-play" class="block px-3 py-2 text-xs font-bold rounded-lg hover:bg-paper-dark text-ink">
+                📜 How to Play & Rules
+              </a>
+            </div>
+          </div>
         </nav>
+
 
         <!-- Mobile Menu Button -->
         <button

@@ -21,6 +21,12 @@ interface Props {
 
 const { puzzle } = Astro.props;
 
+// Crawl budget optimization: Index only the recent 45 days of puzzles
+const puzzleDate = new Date(puzzle.dateStr + 'T08:00:00Z').getTime();
+const now = new Date().getTime();
+const daysOld = Math.floor((now - puzzleDate) / (1000 * 60 * 60 * 24));
+const isTooOld = daysOld > 45; // Auto-noindex older archive pages to conserve crawl budget
+
 const pageTitle = `Poople #${puzzle.number} Answer (${puzzle.startWord}): Solution & Hints`;
 const pageDescription = `Full answer and step-by-step hints for Poople #${puzzle.number} (${puzzle.displayDate}). Turn ${puzzle.startWord} to POOP in ${puzzle.solution.minSteps} shortest steps.`;
 
@@ -60,7 +66,7 @@ const schemas = [
 ];
 ---
 
-<Layout title={pageTitle} description={pageDescription} schema={schemas}>
+<Layout title={pageTitle} description={pageDescription} schema={schemas} noindex={isTooOld}>
   <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-10">
     <!-- Breadcrumb -->
     <nav class="flex items-center gap-2 text-xs font-semibold text-ink-muted">
