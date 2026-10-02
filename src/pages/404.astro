@@ -1,0 +1,102 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const pageTitle = '404: Page Not Found - Poople Answer Today';
+const pageDescription = 'Oops! The page or word ladder path you are looking for does not exist. Return to today\'s Poople answer or try our universal solver.';
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center space-y-8">
+    <!-- Animated Cute Confused Mascot -->
+    <div class="flex justify-center">
+      <div class="relative">
+        <svg class="w-24 h-28 animate-bounce" viewBox="0 0 60 70" aria-hidden="true">
+          <use href="#rolly-mascot"></use>
+          <!-- Confused eyes (X X) -->
+          <path d="M20 32 l6 6 M26 32 l-6 6" stroke="#2C221E" stroke-width="2.5" stroke-linecap="round"></path>
+          <path d="M34 32 l6 6 M40 32 l-6 6" stroke="#2C221E" stroke-width="2.5" stroke-linecap="round"></path>
+          <!-- Wavy confused mouth -->
+          <path d="M22 43 q5 -4 10 0 t 8 0" fill="none" stroke="#2C221E" stroke-width="2.5" stroke-linecap="round"></path>
+        </svg>
+        <span class="absolute -top-2 -right-4 px-2.5 py-1 bg-brand text-white font-mono-tile font-black text-xs rounded-full shadow-warm-sm">
+          404!
+        </span>
+      </div>
+    </div>
+
+    <!-- Heading -->
+    <div class="space-y-3">
+      <h1 class="text-3xl sm:text-5xl font-black text-ink tracking-tight">
+        Oops! Hit a <span class="text-brand">Dead End</span>
+      </h1>
+      <p class="text-base text-ink-muted max-w-md mx-auto leading-relaxed">
+        The word or page you're searching for doesn't connect to <strong>POOP</strong>. Let's get you back on the right ladder!
+      </p>
+    </div>
+
+    <!-- Quick Navigation Options -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto pt-4 text-left">
+      <a
+        href="/"
+        class="p-4 bg-white hover:bg-paper-dark border-2 border-paper-border hover:border-brand/40 rounded-xl shadow-warm-sm hover:shadow-warm-md transition-all group"
+      >
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">💩</span>
+          <div>
+            <h3 class="font-black text-sm text-ink group-hover:text-brand transition-colors">Today's Answer</h3>
+            <p class="text-xs text-ink-muted">View daily hints & shortest path</p>
+          </div>
+        </div>
+      </a>
+
+      <a
+        href="/solver"
+        class="p-4 bg-white hover:bg-paper-dark border-2 border-paper-border hover:border-brand/40 rounded-xl shadow-warm-sm hover:shadow-warm-md transition-all group"
+      >
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">🧮</span>
+          <div>
+            <h3 class="font-black text-sm text-ink group-hover:text-brand transition-colors">Poople Solver</h3>
+            <p class="text-xs text-ink-muted">Calculate path for any 4-letter word</p>
+          </div>
+        </div>
+      </a>
+
+      <a
+        href="/unlimited"
+        class="p-4 bg-white hover:bg-paper-dark border-2 border-paper-border hover:border-brand/40 rounded-xl shadow-warm-sm hover:shadow-warm-md transition-all group"
+      >
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">♾️</span>
+          <div>
+            <h3 class="font-black text-sm text-ink group-hover:text-brand transition-colors">Unlimited Practice</h3>
+            <p class="text-xs text-ink-muted">Play endless random ladders</p>
+          </div>
+        </div>
+      </a>
+
+      <a
+        href="/archive"
+        class="p-4 bg-white hover:bg-paper-dark border-2 border-paper-border hover:border-brand/40 rounded-xl shadow-warm-sm hover:shadow-warm-md transition-all group"
+      >
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">📅</span>
+          <div>
+            <h3 class="font-black text-sm text-ink group-hover:text-brand transition-colors">Daily Archive</h3>
+            <p class="text-xs text-ink-muted">Browse past puzzles & solutions</p>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Back button -->
+    <div class="pt-4">
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-brand text-white font-black text-sm rounded-xl shadow-warm-md hover:bg-brand-dark transition-all"
+      >
+        ← Return to Homepage
+      </a>
+    </div>
+  </div>
+</Layout>
