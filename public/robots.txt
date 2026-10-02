@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
+Sitemap: https://poopleanswertoday.com/sitemap.xml
 Sitemap: https://poopleanswertoday.com/sitemap-index.xml
