@@ -14,6 +14,7 @@ export interface DailyPuzzle {
 // Known Historical sequence of starting words (most recent first)
 // Epoch: 2025-08-15 UTC is puzzle #1 (or offset accordingly)
 export const SEED_PUZZLES: { number: number; date: string; startWord: string }[] = [
+  { number: 415, date: '2026-10-03', startWord: 'LACK' },
   { number: 414, date: '2026-10-02', startWord: 'ICED' },
   { number: 413, date: '2026-10-01', startWord: 'TEES' },
   { number: 412, date: '2026-09-30', startWord: 'GAGE' },
