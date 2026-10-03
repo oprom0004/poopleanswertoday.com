@@ -1,34 +1,27 @@
-name: Daily Poople Build & Deploy
+name: Daily Poople Auto Trigger
 
 on:
   schedule:
-    # Runs every day at 08:01 UTC (right after Poople puzzle drops at 08:00 UTC)
-    - cron: '1 8 * * *'
+    # Runs automatically every day at 08:02 UTC (16:02 Beijing Time)
+    # Right after the official Poople drops the new puzzle at 08:00 UTC
+    - cron: '2 8 * * *'
   workflow_dispatch: # Allows manual trigger from GitHub UI anytime
 
+permissions:
+  contents: write
+
 jobs:
-  build-and-deploy:
+  trigger-cloudflare-rebuild:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Build Astro Static Site (Generates Today's Answer Page)
-        run: npm run build
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: poopleanswertoday
-          directory: dist
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Trigger Daily Rebuild for Cloudflare Pages
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          date -u +"%Y-%m-%dT%H:%M:%SZ" > .daily-trigger
+          git add .daily-trigger
+          git commit -m "chore(daily): auto-trigger poople daily build [$(date -u +'%Y-%m-%d')]" || exit 0
+          git push origin main
