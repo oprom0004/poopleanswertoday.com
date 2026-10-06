@@ -11,9 +11,21 @@ export interface DailyPuzzle {
   solution: SolveResult;
 }
 
-// Known Historical sequence of starting words (most recent first)
-// Epoch: 2025-08-15 UTC is puzzle #1 (or offset accordingly)
+// Word pool for deterministic daily sequence
+const WORD_CYCLE = [
+  'LACK', 'ICED', 'TEES', 'GAGE', 'PAIN', 'FOES', 'RISE', 'YARD',
+  'FUNK', 'BEAR', 'ROPE', 'DUST', 'CALM', 'SAFE', 'WORM', 'FILL',
+  'BIRD', 'HEAT', 'GOLD', 'TALK', 'WOOD', 'FARM', 'COLD', 'BELL',
+  'KNEE', 'WIND', 'SOAP', 'CHAT', 'MINT', 'BLUE', 'CURE', 'WARM',
+  'DARK', 'LEAF', 'BOAT', 'FISH', 'PARK', 'RING', 'SNOW', 'TIME',
+  'CARE', 'MOON', 'STAR', 'DOOR', 'SONG', 'WALK', 'RAIN', 'FIRE'
+];
+
+// Historical sequence of starting words
 export const SEED_PUZZLES: { number: number; date: string; startWord: string }[] = [
+  { number: 418, date: '2026-10-06', startWord: 'MINT' },
+  { number: 417, date: '2026-10-05', startWord: 'COLD' },
+  { number: 416, date: '2026-10-04', startWord: 'WARM' },
   { number: 415, date: '2026-10-03', startWord: 'LACK' },
   { number: 414, date: '2026-10-02', startWord: 'ICED' },
   { number: 413, date: '2026-10-01', startWord: 'TEES' },
@@ -49,7 +61,7 @@ export const SEED_PUZZLES: { number: number; date: string; startWord: string }[]
 ];
 
 function formatDateDisplay(dateStr: string): { displayDate: string; dayOfWeek: string } {
-  const d = new Date(dateStr + 'T08:00:00Z');
+  const d = new Date(dateStr + 'T00:00:00Z');
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   return {
@@ -73,70 +85,69 @@ export function buildPuzzle(item: { number: number; date: string; startWord: str
   };
 }
 
+/**
+ * Returns all historical puzzles up to the current date dynamically.
+ * Bridges forward from seed list to today seamlessly.
+ */
 export function getAllPuzzles(): DailyPuzzle[] {
-  return SEED_PUZZLES.map(buildPuzzle);
+  const now = new Date();
+  const yyyy = now.getUTCFullYear();
+  const mm = String(now.getUTCMonth() + 1).padStart(2, '0');
+  const dd = String(now.getUTCDate()).padStart(2, '0');
+  const todayStr = `${yyyy}-${mm}-${dd}`;
+
+  // Start with seed puzzles
+  const puzzleMap = new Map<string, { number: number; date: string; startWord: string }>();
+  for (const p of SEED_PUZZLES) {
+    puzzleMap.set(p.date, p);
+  }
+
+  // Find the latest seed date
+  const sortedDates = Array.from(puzzleMap.keys()).sort();
+  const latestSeedDateStr = sortedDates[sortedDates.length - 1] || '2026-10-06';
+  const latestSeed = puzzleMap.get(latestSeedDateStr)!;
+
+  // If today is past the latest seed date, extrapolate forward day by day
+  let currDate = new Date(`${latestSeedDateStr}T00:00:00Z`);
+  const targetDate = new Date(`${todayStr}T00:00:00Z`);
+
+  let currentNum = latestSeed.number;
+
+  while (currDate < targetDate) {
+    currDate.setUTCDate(currDate.getUTCDate() + 1);
+    currentNum += 1;
+
+    const y = currDate.getUTCFullYear();
+    const m = String(currDate.getUTCMonth() + 1).padStart(2, '0');
+    const d = String(currDate.getUTCDate()).padStart(2, '0');
+    const dateStr = `${y}-${m}-${d}`;
+
+    if (!puzzleMap.has(dateStr)) {
+      const word = WORD_CYCLE[currentNum % WORD_CYCLE.length];
+      puzzleMap.set(dateStr, {
+        number: currentNum,
+        date: dateStr,
+        startWord: word,
+      });
+    }
+  }
+
+  // Sort descending by date (most recent first)
+  const allItems = Array.from(puzzleMap.values()).sort((a, b) => b.date.localeCompare(a.date));
+  return allItems.map(buildPuzzle);
 }
 
 export function getTodayPuzzle(): DailyPuzzle {
-  // If today matches a known seed puzzle, return it directly
-  const now = new Date();
-  const utcHours = now.getUTCHours();
-  
-  // If current UTC time is before 08:00 UTC, the daily puzzle is technically from the previous calendar day
-  const effectiveDate = new Date(now);
-  if (utcHours < 8) {
-    effectiveDate.setUTCDate(effectiveDate.getUTCDate() - 1);
-  }
-  
-  const yyyy = effectiveDate.getUTCFullYear();
-  const mm = String(effectiveDate.getUTCMonth() + 1).padStart(2, '0');
-  const dd = String(effectiveDate.getUTCDate()).padStart(2, '0');
-  const todayStr = `${yyyy}-${mm}-${dd}`;
-
-  const found = SEED_PUZZLES.find(p => p.date === todayStr);
-  if (found) {
-    return buildPuzzle(found);
-  }
-
-  // If beyond seed list, extrapolate puzzle number from Epoch (#1 = 2025-08-15)
-  const epoch = new Date('2025-08-15T08:00:00Z').getTime();
-  const currentEpochTime = new Date(`${todayStr}T08:00:00Z`).getTime();
-  const daysDiff = Math.floor((currentEpochTime - epoch) / (1000 * 60 * 60 * 24)) + 1;
-
-  // Fallback / extrapolated start word from pool
-  const wordPool = ['ICED', 'TEES', 'GAGE', 'PAIN', 'FOES', 'RISE', 'YARD', 'FUNK', 'COLD', 'WARM', 'SAFE', 'CALM', 'DUST', 'ROPE', 'BEAR', 'LACK'];
-  const assignedWord = wordPool[Math.abs(daysDiff) % wordPool.length];
-
-  return buildPuzzle({
-    number: Math.max(1, daysDiff),
-    date: todayStr,
-    startWord: assignedWord,
-  });
+  const all = getAllPuzzles();
+  return all[0];
 }
 
 export function getYesterdayPuzzle(): DailyPuzzle {
-  const today = getTodayPuzzle();
-  const prevDate = new Date(`${today.dateStr}T08:00:00Z`);
-  prevDate.setUTCDate(prevDate.getUTCDate() - 1);
-  
-  const yyyy = prevDate.getUTCFullYear();
-  const mm = String(prevDate.getUTCMonth() + 1).padStart(2, '0');
-  const dd = String(prevDate.getUTCDate()).padStart(2, '0');
-  const yesterdayStr = `${yyyy}-${mm}-${dd}`;
-
-  const found = SEED_PUZZLES.find(p => p.date === yesterdayStr);
-  if (found) {
-    return buildPuzzle(found);
-  }
-
-  return buildPuzzle({
-    number: today.number - 1,
-    date: yesterdayStr,
-    startWord: SEED_PUZZLES[1]?.startWord || 'TEES',
-  });
+  const all = getAllPuzzles();
+  return all[1] || all[0];
 }
 
 export function getRecentPuzzles(count: number = 8): DailyPuzzle[] {
-  return SEED_PUZZLES.slice(0, count).map(buildPuzzle);
+  const all = getAllPuzzles();
+  return all.slice(0, count);
 }
-
